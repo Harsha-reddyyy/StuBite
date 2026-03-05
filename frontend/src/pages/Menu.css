@@ -1,0 +1,222 @@
+.menu-page{
+  padding:120px 100px;
+  background:#0F1115;
+  min-height:100vh;
+}
+
+.menu-page h1{
+  color:white;
+  text-align:center;
+  margin-bottom:60px;
+}
+
+.menu-page h2{
+  color:white;
+  text-align:center;
+  margin-bottom:60px;
+}
+
+.menu-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:40px;
+}
+
+.food-card{
+  background:#1A1D24;
+  border-radius:15px;
+  overflow:hidden;
+  text-align:center;
+  transition:0.25s;
+}
+
+.food-card:hover{
+  transform:translateY(-6px);
+  box-shadow:0 15px 35px rgba(0,0,0,0.5);
+}
+
+.food-card img{
+  width:100%;
+  height:200px;
+  object-fit:cover;
+}
+
+.food-card h3{
+  color:white;
+  margin-top:10px;
+  font-size: 24px;
+}
+
+.food-card p{
+  color:#FF6B00;
+  font-size:22px;
+  font-weight:700;
+  letter-spacing:0.5px;
+  margin-top:8px;
+}
+
+.food-card button{
+  margin:15px;
+  padding:10px 20px;
+  border:none;
+  background:#FF6B00;
+  color:white;
+  border-radius:8px;
+  cursor:pointer;
+}
+
+/* BACK BUTTON */
+
+.back-btn{
+  position: fixed;
+  top: 100px;
+  left: 60px;
+
+  display:flex;
+  align-items:center;
+  gap:8px;
+
+  padding:10px 18px;
+
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(10px);
+
+  border-radius:10px;
+  border:1px solid rgba(255,255,255,0.15);
+
+  color:white;
+  text-decoration:none;
+  font-size:15px;
+  font-weight:500;
+
+  transition: all 0.3s ease;
+
+  z-index:100;
+}
+
+/* ICON */
+.back-icon{
+  font-size:18px;
+}
+
+/* HOVER EFFECT */
+.back-btn:hover{
+  
+  background:#FF6B00;
+  color:white;
+  transform: translateY(-2px);
+  box-shadow:0 8px 20px rgba(255,107,0,0.4);
+}
+
+.cart-controls{
+margin-top:12px;
+display:flex;
+justify-content:center;
+}
+
+.add-btn{
+
+background:#ff7a00;
+border:none;
+padding:10px 22px;
+border-radius:8px;
+color:white;
+font-weight:600;
+cursor:pointer;
+transition:0.2s;
+}
+
+.add-btn:hover{
+transform:scale(1.05);
+}
+
+/* CART CONTROL WRAPPER */
+.cart-controls{
+margin-top:18px;
+display:flex;
+justify-content:center;
+}
+
+/* ADD BUTTON */
+
+.add-btn{
+background:#ff7a00;
+border:none;
+color:white;
+font-weight:700;
+font-size:15px;
+padding:10px 28px;
+border-radius:8px;
+cursor:pointer;
+transition:0.2s;
+letter-spacing:1px;
+}
+
+.add-btn:hover{
+transform:scale(1.06);
+box-shadow:0 6px 14px rgba(255,122,0,0.35);
+}
+
+/* QUANTITY CONTAINER */
+
+.quantity-controls{
+
+display:flex;
+align-items:center;
+justify-content:center;
+
+gap:18px;
+
+background:#141414;
+border:1px solid #2a2a2a;
+
+padding:8px 18px;
+border-radius:10px;
+
+min-width:120px;
+
+box-shadow:0 6px 16px rgba(0,0,0,0.4);
+}
+
+/* BUTTONS */
+
+.qty-btn{
+
+display:flex;
+align-items:center;
+justify-content:center;
+
+width:34px;
+height:34px;
+
+background:#ff7a00;
+border:none;
+border-radius:6px;
+
+color:white;
+font-size:22px;
+font-weight:bold;
+
+cursor:pointer;
+
+transition:0.2s;
+}
+
+.qty-btn:hover{
+transform:scale(1.08);
+box-shadow:0 4px 10px rgba(255,122,0,0.4);
+}
+
+/* NUMBER */
+
+.qty-number{
+
+min-width:22px;
+
+text-align:center;
+
+font-size:18px;
+font-weight:700;
+
+color:white;
+}

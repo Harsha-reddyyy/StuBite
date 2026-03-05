@@ -1,0 +1,126 @@
+/* OVERLAY BACKGROUND */
+.login-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+
+  width: 100vw;
+  height: 100vh;
+
+  background: rgba(0,0,0,0.75);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  z-index: 9999;
+
+  animation: fadeIn 0.25s ease;
+}
+
+/* MODAL BOX */
+.login-modal {
+  position: relative;
+
+  width: 420px;
+  background: #1A1D24;
+
+  padding: 40px;
+  border-radius: 16px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  box-shadow: 0 20px 60px rgba(0,0,0,0.7);
+
+  animation: scaleIn 0.25s ease;
+}
+
+/* TITLE */
+.login-modal h2 {
+  color: white;
+  text-align: center;
+}
+
+/* INPUTS */
+.login-modal input {
+  padding: 12px;
+  border-radius: 8px;
+  border: none;
+  outline: none;
+
+  background: #2a2d35;
+  color: white;
+}
+
+/* LOGIN BUTTON */
+.login-submit {
+  background: #FF6B00;
+  color: white;
+
+  border: none;
+  padding: 12px;
+
+  border-radius: 8px;
+  cursor: pointer;
+
+  font-weight: 600;
+
+  transition: all 0.25s ease;
+}
+
+.login-submit:hover {
+  background: #ff7d1a;
+  transform: translateY(-1px);
+}
+
+/* CLOSE BUTTON */
+.close-btn {
+  position: absolute;
+  top: 18px;
+  right: 22px;
+
+  background: none;
+  border: none;
+
+  color: white;
+  font-size: 20px;
+
+  cursor: pointer;
+
+  transition: 0.2s;
+}
+
+.close-btn:hover {
+  color: #FF6B00;
+}
+
+/* NOTE TEXT */
+.login-note {
+  font-size: 18px;
+  color: #A0A3BD;
+  text-align: center;
+}
+
+/* ANIMATIONS */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}

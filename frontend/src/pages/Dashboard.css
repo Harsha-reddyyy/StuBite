@@ -1,0 +1,453 @@
+.dashboard-page{
+  padding-top:110px;
+  min-height:100vh;
+  background:#0b0b0b;
+  display:flex;
+  justify-content:center;
+  color:white;
+}
+
+/* MAIN CONTAINER */
+
+.dashboard-container{
+  width:1200px;
+  display:flex;
+  gap:40px;
+}
+
+/* SIDEBAR */
+
+.dashboard-sidebar{
+  width:320px;
+  background:#151515;
+  border-radius:14px;
+  padding:35px;
+}
+
+/* USER INFO */
+
+.dashboard-user{
+  border-bottom:1px solid #2a2a2a;
+  padding-bottom:25px;
+  margin-bottom:30px;
+}
+
+.dashboard-user h2{
+  font-size:26px;
+  margin:0;
+}
+
+.dashboard-user p{
+  font-size:15px;
+  opacity:0.6;
+  margin-top:6px;
+}
+
+/* MENU */
+
+.dashboard-menu{
+  display:flex;
+  flex-direction:column;
+  gap:5px;
+}
+
+/* MENU ITEMS */
+
+.menu-item{
+  font-size:20px;
+  padding:18px 10px;
+  border-bottom:1px solid #2a2a2a;
+  cursor:pointer;
+  transition:0.25s;
+}
+
+.menu-item:hover{
+  color:#ff7a00;
+  padding-left:15px;
+}
+
+.menu-item.active{
+  color:#ff7a00;
+}
+
+.logout:hover{
+  color:#ff4d4d;
+}
+
+/* RIGHT SIDE */
+
+.dashboard-content{
+  flex:1;
+  background:#151515;
+  border-radius:14px;
+  padding:40px;
+}
+
+/* PAGE TITLE */
+
+.dashboard-content h1{
+  font-size:32px;
+  margin-bottom:30px;
+}
+
+/* EMPTY ADDRESS BOX */
+
+.address-box{
+  background:#1f1f1f;
+  padding:35px;
+  border-radius:12px;
+  font-size:18px;
+}
+
+.address-box button{
+  margin-top:20px;
+  padding:12px 22px;
+  font-size:16px;
+  background:#ff7a00;
+  border:none;
+  border-radius:8px;
+  color:white;
+  cursor:pointer;
+  transition:0.2s;
+}
+
+.address-box button:hover{
+  transform:scale(1.05);
+}
+
+/* ADDRESS FORM */
+
+.address-form{
+  background:#181818;
+  padding:35px;
+  border-radius:14px;
+
+  display:flex;
+  flex-direction:column;
+  gap:22px;
+
+  max-width:520px;
+
+  box-shadow:0 8px 25px rgba(0,0,0,0.4);
+}
+
+/* FORM TITLE */
+
+.address-form h2{
+  font-size:28px;
+  margin-bottom:10px;
+}
+
+/* FORM GROUP */
+
+.form-group{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+
+.form-group label{
+  font-size:16px;
+  font-weight:500;
+  opacity:0.9;
+}
+
+/* INPUTS */
+
+.form-group input,
+.form-group select{
+  padding:14px;
+  border-radius:8px;
+  border:1px solid #2a2a2a;
+  background:#0f0f0f;
+  color:white;
+  font-size:15px;
+  transition:0.2s;
+}
+
+/* INPUT FOCUS */
+
+.form-group input:focus,
+.form-group select:focus{
+  outline:none;
+  border-color:#ff7a00;
+  box-shadow:0 0 0 2px rgba(255,122,0,0.2);
+}
+
+/* FLOOR + ROOM ROW */
+
+.form-row{
+  display:flex;
+  gap:16px;
+}
+
+/* SAVE BUTTON */
+
+.save-address-btn{
+  margin-top:10px;
+  padding:14px;
+  background:#ff7a00;
+  border:none;
+  border-radius:10px;
+  font-size:17px;
+  font-weight:600;
+  cursor:pointer;
+  color:white;
+  transition:0.2s;
+}
+
+.save-address-btn:hover{
+  transform:scale(1.03);
+  box-shadow:0 6px 18px rgba(255,122,0,0.3);
+}
+
+/* SAVED ADDRESS CARD */
+
+.saved-address{
+  background:#1c1c1c;
+  border:1px solid #2a2a2a;
+  border-radius:12px;
+  padding:22px;
+  margin-top:20px;
+  transition:0.25s;
+}
+
+.saved-address:hover{
+  transform:translateY(-4px);
+  border-color:#ff7a00;
+}
+
+/* ADDRESS TITLE */
+
+.saved-address h3{
+  font-size:20px;
+  margin-bottom:8px;
+}
+
+.saved-address p{
+  opacity:0.8;
+  margin:4px 0;
+}
+
+/* ADDRESS BUTTONS */
+
+.address-actions{
+  margin-top:14px;
+  display:flex;
+  gap:10px;
+}
+
+/* DELIVER BUTTON */
+
+.deliver-btn{
+  background:#ff7a00;
+  border:none;
+  padding:10px 18px;
+  border-radius:8px;
+  color:white;
+  cursor:pointer;
+  font-weight:600;
+  transition:0.2s;
+}
+
+.deliver-btn:hover{
+  transform:scale(1.05);
+}
+
+/* EDIT BUTTON */
+
+.edit-btn{
+  background:#2a2a2a;
+  border:none;
+  padding:10px 18px;
+  border-radius:8px;
+  color:white;
+  cursor:pointer;
+  transition:0.2s;
+}
+
+.edit-btn:hover{
+  background:#ff7a00;
+  
+}
+
+.default-label{
+
+background:#ff7a00;
+color:white;
+font-size:13px;
+padding:4px 10px;
+border-radius:6px;
+display:inline-block;
+margin-bottom:8px;
+
+}
+
+.address-name{
+
+font-weight:600;
+font-size:17px;
+
+}
+
+.address-phone{
+
+font-weight:600;
+opacity:0.9;
+
+}
+
+.delete-btn{
+
+background:#ff7a00;
+border:none;
+padding:10px 16px;
+border-radius:8px;
+color:white;
+cursor:pointer;
+
+}
+
+.delete-btn:hover{
+
+background:#ff4d4d;
+
+}
+
+.default-label{
+
+background:#ff7a00;
+color:white;
+font-size:13px;
+padding:4px 10px;
+border-radius:6px;
+display:inline-block;
+margin-bottom:8px;
+
+}
+
+.address-name{
+
+font-weight:600;
+font-size:17px;
+
+}
+
+.address-phone{
+
+font-weight:600;
+opacity:0.9;
+
+}
+
+.delete-btn{
+
+background:#ff7a00;
+border:none;
+padding:10px 16px;
+border-radius:8px;
+color:white;
+cursor:pointer;
+
+}
+
+.delete-btn:hover{
+
+background:#ff4d4d;
+
+}
+
+.default-btn{
+  background:#ff7a00;
+border:none;
+padding:10px 16px;
+border-radius:8px;
+color:white;
+cursor:pointer;
+}
+
+.default-btn:hover{
+  background:#ff4d4d;
+}
+
+.form-buttons{
+display:flex;
+gap:12px;
+margin-top:10px;
+}
+
+.remove-default-btn{
+
+padding:14px;
+background:#333;
+border:none;
+border-radius:10px;
+font-size:16px;
+cursor:pointer;
+color:white;
+transition:0.2s;
+height:60px;
+
+}
+
+.remove-default-btn:hover{
+background:#ff4d4d;
+}
+
+.order-card{
+background:#1A1D24;
+padding:20px;
+border-radius:14px;
+margin-top:20px;
+border:1px solid #2a2a2a;
+box-shadow:0 8px 25px rgba(0,0,0,0.5);
+}
+
+.order-header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:10px;
+}
+
+.order-id{
+font-size:18px;
+font-weight:700;
+}
+
+.order-status{
+background:#1e8e3e;
+color:white;
+font-size:16px;
+padding:4px 10px;
+border-radius:6px;
+}
+
+.order-date{
+font-size:18px;
+opacity:0.7;
+margin-bottom:15px;
+}
+
+.order-items{
+border-top:1px solid #2a2a2a;
+padding-top:10px;
+}
+
+.order-item{
+display:flex;
+justify-content:space-between;
+margin-top:6px;
+font-size:15px;
+}
+
+.order-total{
+display:flex;
+justify-content:space-between;
+margin-top:15px;
+padding-top:10px;
+border-top:1px solid #2a2a2a;
+font-size:18px;
+font-weight:700;
+color:#ff7a00;
+}

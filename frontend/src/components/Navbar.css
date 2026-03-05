@@ -1,54 +1,231 @@
+/* NAVBAR */
 .navbar {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: 95px; /* increased from 80 */
+
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 20px 80px;
-  background-color: #FF6B00;
-  color: white;
-  position: relative;
+
+  padding: 0 50px;
+  box-sizing: border-box;
+
+  background: rgba(0,0,0,0.45);
+  backdrop-filter: blur(12px);
+
+  z-index: 1000;
 }
 
-/* Logo */
-.logo {
-  font-size: 40px;
-  font-weight: bold;
+/* LEFT */
+.nav-left {
+  flex: 1;
 }
 
-/* Center Navigation */
-.nav-links {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 50px;
-  list-style: none;
-  font-size: 20px;
-}
-
-.nav-links li {
+.logo-img {
+  height: 70px; /* bigger logo */
   cursor: pointer;
-  transition: 0.3s ease;
+  transition: transform 0.25s ease;
 }
 
-.nav-links li:hover {
-  color: black;
+.logo-img:hover{
+  transform: scale(1.08);
 }
 
-/* Login Button - Right Corner */
-.login-btn {
-  padding: 10px 22px;
-  border: none;
-  background-color: white;
+/* CENTER */
+.nav-center {
+  flex: 1;
+  display: flex;
+  font-size: 27px;
+  justify-content: center;
+  gap: 45px;
+}
+
+.nav-center a {
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 27px;
+  transition: color 0.25s ease;
+}
+
+.nav-center a:hover {
   color: #FF6B00;
-  font-weight: 600;
+}
+
+/* RIGHT */
+.nav-right {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 25px;
+  padding-right: 10px;
+}
+
+/* LOGIN BUTTON */
+.login-btn {
+  background: #FF6B00;
+  color: white;
+  border: none;
+  padding: 12px 26px;
   border-radius: 8px;
   font-size: 15px;
   cursor: pointer;
-  transition: 0.3s ease;
+  transition: all 0.25s ease;
 }
 
 .login-btn:hover {
-  background-color: #f5f5f5;
-  color:#f5f5f5;
-  background-color: black;
+  background: white;
+  color: #FF6B00;
+  transform:scale(1.05);
+}
+
+/* CART BUTTON */
+.cart-icon{
+  position: relative;
+
+  display:flex;
+  align-items:center;
+  gap:8px;
+
+  padding:8px 16px;
+  background:#ff7a00;
+
+  border-radius:8px;
+
+  cursor:pointer;
+
+  transition:all 0.25s ease;
+}
+
+.cart-icon:hover{
+  background:#1e1e1e;
+  transform:scale(1.05);
+}
+
+/* CART ICON SVG */
+.cart-svg{
+  font-size:30px;
+  color:white;
+}
+
+/* CART TEXT */
+.cart-text{
+  color:white;
+  font-size:17px;
+  font-weight:500;
+}
+
+/* CART BADGE */
+.cart-count{
+  position:absolute;
+  top:-6px;
+  right:-6px;
+
+  background:rgb(255, 250, 250);
+  color:#ff7a00;
+
+  font-size:16px;
+  font-weight:bold;
+
+  padding:3px 7px;
+
+  border-radius:50%;
+}
+
+/* PROFILE SECTION */
+.profile-section{
+  position:relative;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:8px 14px;
+  border-radius:8px;
+  color:white;
+  font-size: 20px;
+  cursor:pointer;
+  transition:all 0.25s ease;
+}
+
+.profile-section:hover{
+  background:#2a2a2a;
+  transform: scale(1.05);
+}
+
+/* PROFILE ICON */
+.profile-icon{
+  font-size:33px;
+  transition: transform 0.25s ease;
+}
+
+.profile-section:hover .profile-icon{
+  transform: rotate(8deg) scale(1.1);
+}
+
+/* PROFILE DROPDOWN */
+.profile-dropdown{
+  position:absolute;
+  top:60px;
+  right:0;
+
+  background:#1c1c1c;
+  border-radius:12px;
+
+  width:230px;              /* bigger width */
+
+  display:flex;
+  flex-direction:column;
+
+  padding:12px 0;
+
+  box-shadow:0 12px 30px rgba(0,0,0,0.45);
+
+  animation: dropdownFade 0.2s ease;
+}
+
+/* DROPDOWN ITEMS */
+.profile-dropdown a,
+.profile-dropdown button{
+
+  padding:18px 24px;     /* more space */
+  text-decoration:none;
+
+  color:white;
+  background:none;
+  border:none;
+
+  text-align:left;
+  cursor:pointer;
+
+  font-size:18px;        /* bigger text */
+  font-weight:500;
+
+  transition:all 0.25s ease;
+}
+
+.profile-dropdown a:hover,
+.profile-dropdown button:hover{
+
+  background:#2a2a2a;
+
+  padding-left:32px;
+  color:#ff7a00;
+
+  transform:scale(1.02);
+}
+
+/* DROPDOWN ANIMATION */
+@keyframes dropdownFade{
+
+  from{
+    opacity:0;
+    transform: translateY(-8px);
+  }
+
+  to{
+    opacity:1;
+    transform: translateY(0);
+  }
+
 }

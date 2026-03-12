@@ -4,11 +4,14 @@ import { CartContext } from "../context/CartContext";
 import CartSummary from "../components/CartSummary";
 import OrderSuccessModal from "../components/OrderSuccessModal";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 function Checkout() {
 
   const { cartItems, setCartItems } = useContext(CartContext);
+
   const [showSuccess, setShowSuccess] = useState(false);
+
   const navigate = useNavigate();
 
   const addresses =
@@ -27,13 +30,13 @@ function Checkout() {
 
   const placeOrder = () => {
 
-    if (!defaultAddress) {
-      alert("Please add a delivery address before placing order");
+    if (cartItems.length === 0) {
+      toast.error("Your cart is empty 🛒");
       return;
     }
 
-    if (cartItems.length === 0) {
-      alert("Your cart is empty");
+    if (!defaultAddress) {
+      toast.warning("Please add a delivery address 📍");
       return;
     }
 
@@ -56,9 +59,11 @@ function Checkout() {
 
     setCartItems([]);
 
-    setShowSuccess(true);
+    toast.success("Order placed successfully 🎉");
 
+    setShowSuccess(true);
   };
+
 
   return (
 
@@ -71,7 +76,6 @@ function Checkout() {
 
 
         {/* DELIVERY ADDRESS */}
-
         <div className="checkout-card">
 
           <h2>Delivery Address</h2>
@@ -111,7 +115,6 @@ function Checkout() {
 
 
         {/* ORDER SUMMARY */}
-
         <div className="checkout-card">
 
           <h2>Order Summary</h2>
@@ -151,7 +154,6 @@ function Checkout() {
 
 
         {/* PAYMENT */}
-
         <div className="checkout-card">
 
           <h2>Payment Method</h2>
@@ -180,14 +182,12 @@ function Checkout() {
 
 
       {/* RIGHT SIDE CART */}
-
       <div className="checkout-right">
         <CartSummary />
       </div>
 
 
       {/* SUCCESS MODAL */}
-
       <OrderSuccessModal
         isOpen={showSuccess}
         closeModal={() => {

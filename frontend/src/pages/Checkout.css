@@ -196,3 +196,20 @@ transition:0.2s;
 .add-address-btn:hover{
 transform:scale(1.05);
 }
+
+.checkout-warning{
+
+background:#2a1f00;
+
+border:1px solid #ffb020;
+
+color:#ffb020;
+
+padding:12px;
+
+border-radius:8px;
+
+margin-top:15px;
+
+font-size:14px;
+}

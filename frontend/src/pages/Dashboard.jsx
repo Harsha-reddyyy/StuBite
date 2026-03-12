@@ -1,12 +1,12 @@
 import "./Dashboard.css";
 import { useState, useEffect } from "react";
+import { toast } from "react-toastify";
 
 function Dashboard() {
 
   const user = JSON.parse(localStorage.getItem("stubiteUser")) || {};
 
   const [activeTab, setActiveTab] = useState("addresses");
-
   const [showForm, setShowForm] = useState(false);
   const [editingIndex, setEditingIndex] = useState(null);
 
@@ -23,7 +23,6 @@ function Dashboard() {
   useEffect(() => {
     localStorage.setItem("stubiteAddresses", JSON.stringify(addresses));
   }, [addresses]);
-
 
   const handleSaveAddress = (e) => {
 
@@ -60,8 +59,9 @@ function Dashboard() {
 
     setShowForm(false);
     form.reset();
-  };
 
+    toast.success("Address saved successfully 📍");
+  };
 
   const setDefaultAddress = (index) => {
 
@@ -71,8 +71,9 @@ function Dashboard() {
     }));
 
     setAddresses(updated);
-  };
 
+    toast.success("Default address updated");
+  };
 
   const removeDefaultAddress = () => {
 
@@ -82,8 +83,9 @@ function Dashboard() {
     updated[editingIndex].isDefault = false;
 
     setAddresses(updated);
-  };
 
+    toast.info("Default address removed");
+  };
 
   const handleEdit = (index) => {
 
@@ -107,18 +109,35 @@ function Dashboard() {
     }, 50);
   };
 
-
   const handleDelete = (index) => {
 
     const confirmDelete = window.confirm("Delete this address?");
-
     if (!confirmDelete) return;
 
     const updated = addresses.filter((_, i) => i !== index);
-
     setAddresses(updated);
+    toast.error("Address deleted");
   };
 
+  const handleProfileSave = (e) => {
+
+    e.preventDefault();
+
+    const form = e.target;
+
+    const updatedUser = {
+      ...user,
+      name: form.name.value,
+      password: form.password.value
+    };
+
+    localStorage.setItem(
+      "stubiteUser",
+      JSON.stringify(updatedUser)
+    );
+
+    toast.success("Profile updated successfully 🎉");
+  };
 
   return (
 
@@ -126,13 +145,20 @@ function Dashboard() {
 
       <div className="dashboard-container">
 
-
         {/* SIDEBAR */}
+
         <div className="dashboard-sidebar">
 
           <div className="dashboard-user">
+
             <h2>{user?.name}</h2>
-            <p>{user?.email}</p>
+
+            <p>
+              {user?.email?.length > 42
+                ? user.email.slice(0, 42) + "..."
+                : user.email}
+            </p>
+
           </div>
 
           <div className="dashboard-menu">
@@ -151,21 +177,26 @@ function Dashboard() {
               Orders
             </div>
 
-            <div className="menu-item">Edit Profile</div>
+            <div
+              className={`menu-item ${activeTab === "profile" ? "active" : ""}`}
+              onClick={() => setActiveTab("profile")}
+            >
+              Edit Profile
+            </div>
 
           </div>
 
         </div>
 
-
         {/* RIGHT SIDE */}
+
         <div className="dashboard-content">
 
+          {/* ADDRESSES */}
 
-          {/* ================= ADDRESSES ================= */}
           {activeTab === "addresses" && (
-            <>
 
+            <>
               <h1>Your Addresses</h1>
 
               {addresses.length === 0 && !showForm && (
@@ -182,7 +213,6 @@ function Dashboard() {
 
               )}
 
-
               {showForm && (
 
                 <form className="address-form" onSubmit={handleSaveAddress}>
@@ -198,6 +228,7 @@ function Dashboard() {
 
                   <div className="form-group">
                     <label>Mobile Number</label>
+
                     <input
                       name="phone"
                       maxLength="10"
@@ -206,17 +237,22 @@ function Dashboard() {
                         e.target.value = e.target.value.replace(/[^0-9]/g, "")
                       }}
                     />
+
                   </div>
 
                   <div className="form-group">
                     <label>Hostel Block</label>
+
                     <select name="block" required>
+
                       <option value="">Select Block</option>
                       <option>A Block</option>
                       <option>B Block</option>
                       <option>C Block</option>
                       <option>D Block</option>
+
                     </select>
+
                   </div>
 
                   <div className="form-row">
@@ -256,7 +292,6 @@ function Dashboard() {
                 </form>
 
               )}
-
 
               {addresses.map((addr, index) => (
 
@@ -307,10 +342,11 @@ function Dashboard() {
               ))}
 
             </>
+
           )}
 
+          {/* ORDERS */}
 
-          {/* ================= ORDERS ================= */}
           {activeTab === "orders" && (
 
             <>
@@ -336,9 +372,7 @@ function Dashboard() {
 
                   </div>
 
-                  <p className="order-date">
-                    {order.date}
-                  </p>
+                  <p className="order-date">{order.date}</p>
 
                   <div className="order-items">
 
@@ -346,13 +380,8 @@ function Dashboard() {
 
                       <div className="order-item" key={i}>
 
-                        <span>
-                          {item.name} x{item.quantity}
-                        </span>
-
-                        <span>
-                          ₹{item.price * item.quantity}
-                        </span>
+                        <span>{item.name} x{item.quantity}</span>
+                        <span>₹{item.price * item.quantity}</span>
 
                       </div>
 
@@ -363,7 +392,6 @@ function Dashboard() {
                   <div className="order-total">
 
                     <span>Total</span>
-
                     <span>₹{order.total}</span>
 
                   </div>
@@ -373,6 +401,52 @@ function Dashboard() {
               ))}
 
             </>
+
+          )}
+
+          {/* EDIT PROFILE */}
+
+          {activeTab === "profile" && (
+
+            <>
+              <h1>Edit Profile</h1>
+
+              <form className="profile-form" onSubmit={handleProfileSave}>
+
+                <div className="form-group">
+                  <label>Full Name</label>
+                  <input
+                    name="name"
+                    defaultValue={user?.name}
+                    required
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label>Email</label>
+                  <input
+                    value={user?.email}
+                    readOnly
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label>New Password</label>
+                  <input
+                    name="password"
+                    type="password"
+                    placeholder="Enter new password"
+                  />
+                </div>
+
+                <button type="submit" className="save-profile-btn">
+                  Save Changes
+                </button>
+
+              </form>
+
+            </>
+
           )}
 
         </div>
@@ -380,6 +454,7 @@ function Dashboard() {
       </div>
 
     </div>
+
   );
 }
 

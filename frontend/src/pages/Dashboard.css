@@ -19,6 +19,7 @@
 
 .dashboard-sidebar{
   width:320px;
+  max-width: 320px;
   background:#151515;
   border-radius:14px;
   padding:35px;
@@ -163,6 +164,12 @@
   color:white;
   font-size:15px;
   transition:0.2s;
+}
+.input-warning{
+color:#ffb020;
+font-size:13px;
+margin-top:4px;
+display:none;
 }
 
 /* INPUT FOCUS */
@@ -451,3 +458,59 @@ font-size:18px;
 font-weight:700;
 color:#ff7a00;
 }
+
+.profile-form{
+
+background:#1c1c1c;
+padding:30px;
+border-radius:14px;
+max-width:500px;
+
+display:flex;
+flex-direction:column;
+gap:18px;
+
+}
+
+.profile-form input{
+
+padding:12px;
+border-radius:8px;
+border:none;
+
+background:#2a2a2a;
+color:white;
+
+}
+
+.profile-form label{
+
+font-size:14px;
+color:#aaa;
+
+}
+
+.save-profile-btn{
+
+background:#ff7a00;
+border:none;
+
+padding:12px;
+border-radius:8px;
+
+color:white;
+font-weight:600;
+
+cursor:pointer;
+
+transition:0.25s;
+
+}
+
+.save-profile-btn:hover{
+
+background:#ff8f1f;
+transform:scale(1.03);
+
+}
+

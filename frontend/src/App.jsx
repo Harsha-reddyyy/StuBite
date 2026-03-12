@@ -1,5 +1,6 @@
-import Navbar from "./components/Navbar";
-import Hero from "./components/hero";
+import Navbar from "./components/navbar";
+import Hero from "./components/Hero";
+import About from "./pages/About";
 import Canteens from "./components/Canteens";
 import Menu from "./pages/Menu";
 import Dashboard from "./pages/Dashboard";
@@ -8,6 +9,8 @@ import OrderSuccess from "./pages/OrderSuccess";
 import Footer from "./components/Footer";
 
 import { Routes, Route } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   return (
@@ -16,7 +19,9 @@ function App() {
 
       <Routes>
         {/* Home Page */}
-        <Route path="/"element={<><Hero /><Canteens /></>}/>
+        <Route path="/" element={<><Hero /><Canteens /></>} />
+
+        <Route path="/about" element={<About />} />
         {/* Menu Page */}
         <Route path="/menu/:canteenName" element={<Menu />} />
         {/* Dashboard Page */}
@@ -29,6 +34,15 @@ function App() {
 
 
       <Footer />
+      <ToastContainer
+        position="top-right"
+        autoClose={2500}
+        hideProgressBar={false}
+        closeOnClick
+        pauseOnHover
+        theme="dark"
+        className="stubite-toast"
+      />
     </>
   );
 }

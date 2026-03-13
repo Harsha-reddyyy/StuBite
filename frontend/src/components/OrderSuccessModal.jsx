@@ -9,16 +9,17 @@ function OrderSuccessModal({ isOpen, closeModal }) {
     <div className="success-overlay">
 
       <div className="success-modal">
+        <div className="success-badge">Order Confirmed</div>
 
         <button className="success-close" onClick={closeModal}>
           ✕
         </button>
 
-        <h1>🎉 Order Placed Successfully</h1>
+        <h1>Order Placed Successfully</h1>
 
-        <p>Your food is being prepared.</p>
+        <p>Your food is now in the canteen queue.</p>
 
-        <p>Check it in your Orders History.</p>
+        <p>Track it anytime from your order history in the dashboard.</p>
 
         <button
           className="success-btn"

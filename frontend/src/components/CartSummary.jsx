@@ -2,7 +2,7 @@ import "./CartSummary.css";
 import { useContext } from "react";
 import { CartContext } from "../context/CartContext";
 
-function CartSummary() {
+function CartSummary({ title = "Your Cart" }) {
 
   const { cartItems, setCartItems } = useContext(CartContext);
 
@@ -42,8 +42,7 @@ function CartSummary() {
   return (
 
     <div className="cart-summary">
-
-      <h2>Your Cart</h2>
+      <h2>{title}</h2>
 
       {cartItems.length === 0 ? (
         <p className="empty-cart">Your cart is empty</p>

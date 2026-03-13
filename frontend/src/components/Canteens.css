@@ -31,6 +31,44 @@
   gap: 40px;
 }
 
+.canteen-state-card {
+  grid-column: 1 / -1;
+  background: #1A1D24;
+  border: 1px solid rgba(255, 107, 0, 0.2);
+  border-radius: 18px;
+  padding: 28px;
+  text-align: center;
+  box-shadow: 0px 10px 30px rgba(0,0,0,0.35);
+}
+
+.canteen-state-card h3 {
+  color: white;
+  font-size: 24px;
+  margin-bottom: 12px;
+}
+
+.canteen-state-card p {
+  color: #A0A3BD;
+  font-size: 15px;
+  margin-bottom: 20px;
+}
+
+.canteen-state-card button {
+  border: none;
+  border-radius: 12px;
+  background: #FF6B00;
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
+  padding: 12px 20px;
+  cursor: pointer;
+  transition: 0.25s ease;
+}
+
+.canteen-state-card button:hover {
+  background: #ff842f;
+}
+
 /* ===============================
    CARD DESIGN (PREMIUM)
 ================================ */

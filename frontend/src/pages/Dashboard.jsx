@@ -1,460 +1,586 @@
 import "./Dashboard.css";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import { useAuth } from "../context/AuthContext";
+import { apiRequest } from "../lib/api";
+
+const DASHBOARD_TABS = new Set(["addresses", "orders", "profile"]);
 
 function Dashboard() {
+  const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { user, token, updateUser, logout } = useAuth();
 
-  const user = JSON.parse(localStorage.getItem("stubiteUser")) || {};
-
-  const [activeTab, setActiveTab] = useState("addresses");
+  const initialTab = searchParams.get("tab");
+  const [activeTab, setActiveTab] = useState(
+    DASHBOARD_TABS.has(initialTab) ? initialTab : "addresses"
+  );
   const [showForm, setShowForm] = useState(false);
-  const [editingIndex, setEditingIndex] = useState(null);
-
-  const [addresses, setAddresses] = useState(() => {
-    const saved = localStorage.getItem("stubiteAddresses");
-    return saved ? JSON.parse(saved) : [];
+  const [editingAddressId, setEditingAddressId] = useState(null);
+  const [addressPendingDelete, setAddressPendingDelete] = useState(null);
+  const [addresses, setAddresses] = useState([]);
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [formData, setFormData] = useState({
+    name: "",
+    phone: "",
+    block: "",
+    floor: "",
+    room: ""
   });
 
-  const [orders] = useState(() => {
-    const saved = localStorage.getItem("stubiteOrders");
-    return saved ? JSON.parse(saved) : [];
-  });
+  const sectionMeta = {
+    addresses: {
+      title: "Saved Addresses",
+      description: "Manage the hostel address used during checkout."
+    },
+    orders: {
+      title: "Order History",
+      description: "See your previous orders in one place."
+    },
+    profile: {
+      title: "Profile Settings",
+      description: "Update your name or password."
+    }
+  };
 
   useEffect(() => {
-    localStorage.setItem("stubiteAddresses", JSON.stringify(addresses));
-  }, [addresses]);
+    const nextTab = searchParams.get("tab");
 
-  const handleSaveAddress = (e) => {
-
-    e.preventDefault();
-
-    const form = e.target;
-
-    const newAddress = {
-      name: form.name.value,
-      phone: form.phone.value,
-      block: form.block.value,
-      floor: form.floor.value,
-      room: form.room.value,
-      isDefault: false
-    };
-
-    if (editingIndex !== null) {
-
-      const updated = [...addresses];
-
-      updated[editingIndex] = {
-        ...newAddress,
-        isDefault: addresses[editingIndex].isDefault
-      };
-
-      setAddresses(updated);
-      setEditingIndex(null);
-
-    } else {
-
-      setAddresses([...addresses, newAddress]);
-
+    if (DASHBOARD_TABS.has(nextTab) && nextTab !== activeTab) {
+      setActiveTab(nextTab);
+      return;
     }
 
-    setShowForm(false);
-    form.reset();
+    if (!nextTab && activeTab !== "addresses") {
+      setActiveTab("addresses");
+    }
+  }, [activeTab, searchParams]);
 
-    toast.success("Address saved successfully 📍");
+  const switchTab = (tab) => {
+    setActiveTab(tab);
+
+    if (tab === "addresses") {
+      setSearchParams({});
+      return;
+    }
+
+    setSearchParams({ tab });
   };
 
-  const setDefaultAddress = (index) => {
+  useEffect(() => {
+    if (!token) {
+      navigate("/");
+      return;
+    }
 
-    const updated = addresses.map((addr, i) => ({
-      ...addr,
-      isDefault: i === index
-    }));
-
-    setAddresses(updated);
-
-    toast.success("Default address updated");
-  };
-
-  const removeDefaultAddress = () => {
-
-    if (editingIndex === null) return;
-
-    const updated = [...addresses];
-    updated[editingIndex].isDefault = false;
-
-    setAddresses(updated);
-
-    toast.info("Default address removed");
-  };
-
-  const handleEdit = (index) => {
-
-    setEditingIndex(index);
-    setShowForm(true);
-
-    const addr = addresses[index];
-
-    setTimeout(() => {
-
-      const form = document.querySelector(".address-form");
-
-      if (!form) return;
-
-      form.name.value = addr.name;
-      form.phone.value = addr.phone;
-      form.block.value = addr.block;
-      form.floor.value = addr.floor;
-      form.room.value = addr.room;
-
-    }, 50);
-  };
-
-  const handleDelete = (index) => {
-
-    const confirmDelete = window.confirm("Delete this address?");
-    if (!confirmDelete) return;
-
-    const updated = addresses.filter((_, i) => i !== index);
-    setAddresses(updated);
-    toast.error("Address deleted");
-  };
-
-  const handleProfileSave = (e) => {
-
-    e.preventDefault();
-
-    const form = e.target;
-
-    const updatedUser = {
-      ...user,
-      name: form.name.value,
-      password: form.password.value
+    const loadDashboard = async () => {
+      try {
+        const data = await apiRequest("/api/user/me", { token });
+        updateUser(data.user);
+        setAddresses(data.addresses || []);
+        setOrders(data.orders || []);
+      } catch (error) {
+        toast.error(error.message);
+        logout();
+        navigate("/");
+      } finally {
+        setLoading(false);
+      }
     };
 
-    localStorage.setItem(
-      "stubiteUser",
-      JSON.stringify(updatedUser)
-    );
+    loadDashboard();
+  }, [token, navigate, updateUser, logout]);
 
-    toast.success("Profile updated successfully 🎉");
+  const resetForm = () => {
+    setFormData({
+      name: "",
+      phone: "",
+      block: "",
+      floor: "",
+      room: ""
+    });
+    setEditingAddressId(null);
+    setShowForm(false);
   };
 
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: name === "phone" ? value.replace(/[^0-9]/g, "") : value
+    }));
+  };
+
+  const handleSaveAddress = async (event) => {
+    event.preventDefault();
+
+    try {
+      const payload = {
+        ...formData,
+        floor: Number(formData.floor),
+        room: Number(formData.room),
+        isDefault: editingAddressId
+          ? addresses.find((address) => address._id === editingAddressId)?.isDefault
+          : addresses.length === 0
+      };
+
+      const data = await apiRequest(
+        editingAddressId
+          ? `/api/user/addresses/${editingAddressId}`
+          : "/api/user/addresses",
+        {
+          method: editingAddressId ? "PUT" : "POST",
+          token,
+          body: JSON.stringify(payload)
+        }
+      );
+
+      setAddresses(data.addresses || []);
+      toast.success(data.message);
+      resetForm();
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
+  const handleEdit = (address) => {
+    setEditingAddressId(address._id);
+    setFormData({
+      name: address.name,
+      phone: address.phone,
+      block: address.block,
+      floor: String(address.floor),
+      room: String(address.room)
+    });
+    setShowForm(true);
+  };
+
+  const handleDelete = async (addressId) => {
+    try {
+      const data = await apiRequest(`/api/user/addresses/${addressId}`, {
+        method: "DELETE",
+        token
+      });
+
+      setAddresses(data.addresses || []);
+      if (editingAddressId === addressId) {
+        resetForm();
+      }
+      setAddressPendingDelete(null);
+      toast.error("Address deleted");
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
+  const setDefaultAddress = async (addressId) => {
+    try {
+      const data = await apiRequest(`/api/user/addresses/${addressId}/default`, {
+        method: "PATCH",
+        token
+      });
+
+      setAddresses(data.addresses || []);
+      toast.success(data.message);
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
+  const removeDefaultAddress = async () => {
+    if (!editingAddressId) {
+      return;
+    }
+
+    try {
+      const data = await apiRequest(
+        `/api/user/addresses/${editingAddressId}/default/remove`,
+        {
+          method: "PATCH",
+          token
+        }
+      );
+
+      setAddresses(data.addresses || []);
+      toast.info(data.message);
+      resetForm();
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
+  const handleProfileSave = async (event) => {
+    event.preventDefault();
+
+    const form = event.target;
+    const password = form.password.value.trim();
+
+    try {
+      const data = await apiRequest("/api/user/me", {
+        method: "PUT",
+        token,
+        body: JSON.stringify({
+          name: form.name.value,
+          password: password || undefined
+        })
+      });
+
+      updateUser(data.user);
+      form.password.value = "";
+      toast.success(data.message);
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="dashboard-page">
+        <div className="dashboard-container">
+          <div className="dashboard-panel">
+            <h1>Loading dashboard...</h1>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
-
     <div className="dashboard-page">
-
       <div className="dashboard-container">
-
-        {/* SIDEBAR */}
-
-        <div className="dashboard-sidebar">
-
+        <aside className="dashboard-sidebar">
           <div className="dashboard-user">
-
             <h2>{user?.name}</h2>
-
-            <p>
-              {user?.email?.length > 42
-                ? user.email.slice(0, 42) + "..."
-                : user.email}
-            </p>
-
+            <p>{user?.email}</p>
           </div>
 
           <div className="dashboard-menu">
-
-            <div
+            <button
               className={`menu-item ${activeTab === "addresses" ? "active" : ""}`}
-              onClick={() => setActiveTab("addresses")}
+              onClick={() => switchTab("addresses")}
             >
               Addresses
-            </div>
+            </button>
 
-            <div
+            <button
               className={`menu-item ${activeTab === "orders" ? "active" : ""}`}
-              onClick={() => setActiveTab("orders")}
+              onClick={() => switchTab("orders")}
             >
               Orders
-            </div>
+            </button>
 
-            <div
+            <button
               className={`menu-item ${activeTab === "profile" ? "active" : ""}`}
-              onClick={() => setActiveTab("profile")}
+              onClick={() => switchTab("profile")}
             >
               Edit Profile
+            </button>
+          </div>
+        </aside>
+
+        <section className="dashboard-panel">
+          <div className="dashboard-panel-header">
+            <div>
+              <h1>{sectionMeta[activeTab].title}</h1>
+              <p>{sectionMeta[activeTab].description}</p>
             </div>
 
+            {activeTab === "addresses" && !showForm && (
+              <button
+                className="dashboard-primary-btn"
+                onClick={() => setShowForm(true)}
+              >
+                Add Address
+              </button>
+            )}
+
+            {activeTab === "orders" && (
+              <button
+                className="dashboard-secondary-btn"
+                onClick={() => navigate("/")}
+              >
+                Browse Canteens
+              </button>
+            )}
           </div>
 
-        </div>
-
-        {/* RIGHT SIDE */}
-
-        <div className="dashboard-content">
-
-          {/* ADDRESSES */}
-
           {activeTab === "addresses" && (
-
             <>
-              <h1>Your Addresses</h1>
-
               {addresses.length === 0 && !showForm && (
-
-                <div className="address-box">
-
-                  <p>No saved addresses yet.</p>
-
+                <div className="dashboard-empty-state">
+                  <h3>No saved addresses yet</h3>
+                  <p>Add your hostel block, floor, and room so checkout stays simple.</p>
                   <button onClick={() => setShowForm(true)}>
                     Add New Address
                   </button>
-
                 </div>
-
               )}
 
               {showForm && (
-
                 <form className="address-form" onSubmit={handleSaveAddress}>
-
-                  <h2>
-                    {editingIndex !== null ? "Edit Address" : "Add New Address"}
-                  </h2>
+                  <div className="form-heading">
+                    <h2>{editingAddressId ? "Edit Address" : "Add New Address"}</h2>
+                    <p>Enter the address where your order should be delivered.</p>
+                  </div>
 
                   <div className="form-group">
                     <label>Name</label>
-                    <input name="name" required />
+                    <input
+                      name="name"
+                      required
+                      value={formData.name}
+                      onChange={handleChange}
+                    />
                   </div>
 
                   <div className="form-group">
                     <label>Mobile Number</label>
-
                     <input
                       name="phone"
                       maxLength="10"
                       required
-                      onInput={(e) => {
-                        e.target.value = e.target.value.replace(/[^0-9]/g, "")
-                      }}
+                      value={formData.phone}
+                      onChange={handleChange}
                     />
-
                   </div>
 
                   <div className="form-group">
                     <label>Hostel Block</label>
-
-                    <select name="block" required>
-
+                    <select
+                      name="block"
+                      required
+                      value={formData.block}
+                      onChange={handleChange}
+                    >
                       <option value="">Select Block</option>
                       <option>A Block</option>
                       <option>B Block</option>
                       <option>C Block</option>
                       <option>D Block</option>
-
                     </select>
-
                   </div>
 
                   <div className="form-row">
-
                     <div className="form-group">
                       <label>Floor</label>
-                      <input name="floor" type="number" required />
+                      <input
+                        name="floor"
+                        type="number"
+                        required
+                        value={formData.floor}
+                        onChange={handleChange}
+                      />
                     </div>
 
                     <div className="form-group">
                       <label>Room</label>
-                      <input name="room" type="number" required />
+                      <input
+                        name="room"
+                        type="number"
+                        required
+                        value={formData.room}
+                        onChange={handleChange}
+                      />
                     </div>
-
                   </div>
 
                   <div className="form-buttons">
-
                     <button type="submit" className="save-address-btn">
                       Save Address
                     </button>
 
-                    {editingIndex !== null && addresses[editingIndex]?.isDefault && (
+                    {editingAddressId &&
+                      addresses.find((address) => address._id === editingAddressId)?.isDefault && (
+                        <button
+                          type="button"
+                          className="remove-default-btn"
+                          onClick={removeDefaultAddress}
+                        >
+                          Remove Default
+                        </button>
+                      )}
 
-                      <button
-                        type="button"
-                        className="remove-default-btn"
-                        onClick={removeDefaultAddress}
-                      >
-                        Remove Default
-                      </button>
-
-                    )}
-
+                    <button
+                      type="button"
+                      className="edit-btn"
+                      onClick={resetForm}
+                    >
+                      Cancel
+                    </button>
                   </div>
-
                 </form>
-
               )}
 
-              {addresses.map((addr, index) => (
+              {addresses.length > 0 && (
+                <div className="address-grid">
+                  {addresses.map((address) => (
+                    <div className="saved-address" key={address._id}>
+                      {address.isDefault && (
+                        <div className="default-label">Default Address</div>
+                      )}
 
-                <div className="saved-address" key={index}>
+                      <h3>
+                        {address.block} • Floor {address.floor} • Room {address.room}
+                      </h3>
+                      <p className="address-name">{address.name}</p>
+                      <p className="address-phone">{address.phone}</p>
 
-                  {addr.isDefault && (
-                    <div className="default-label">
-                      Default Address
+                      <div className="address-actions">
+                        {!address.isDefault && (
+                          <button
+                            className="default-btn"
+                            onClick={() => setDefaultAddress(address._id)}
+                          >
+                            Set Default
+                          </button>
+                        )}
+
+                        <button className="edit-btn" onClick={() => handleEdit(address)}>
+                          Edit
+                        </button>
+
+                        <button
+                          className="delete-btn"
+                          onClick={() => setAddressPendingDelete(address)}
+                        >
+                          Delete
+                        </button>
+                      </div>
                     </div>
-                  )}
-
-                  <h3>
-                    📍 {addr.block} • Floor {addr.floor} • Room {addr.room}
-                  </h3>
-
-                  <p className="address-name">{addr.name}</p>
-                  <p className="address-phone">{addr.phone}</p>
-
-                  <div className="address-actions">
-
-                    {!addr.isDefault && (
-                      <button
-                        className="default-btn"
-                        onClick={() => setDefaultAddress(index)}
-                      >
-                        Set Default
-                      </button>
-                    )}
-
-                    <button
-                      className="edit-btn"
-                      onClick={() => handleEdit(index)}
-                    >
-                      Edit
-                    </button>
-
-                    <button
-                      className="delete-btn"
-                      onClick={() => handleDelete(index)}
-                    >
-                      Delete
-                    </button>
-
-                  </div>
-
+                  ))}
                 </div>
-
-              ))}
-
+              )}
             </>
-
           )}
-
-          {/* ORDERS */}
 
           {activeTab === "orders" && (
-
             <>
-              <h1>Your Orders</h1>
-
-              {orders.length === 0 && (
-                <p>No orders yet.</p>
-              )}
-
-              {orders.map((order) => (
-
-                <div className="order-card" key={order.id}>
-
-                  <div className="order-header">
-
-                    <span className="order-id">
-                      Order #{order.id}
-                    </span>
-
-                    <span className="order-status">
-                      Delivered
-                    </span>
-
-                  </div>
-
-                  <p className="order-date">{order.date}</p>
-
-                  <div className="order-items">
-
-                    {order.items.map((item, i) => (
-
-                      <div className="order-item" key={i}>
-
-                        <span>{item.name} x{item.quantity}</span>
-                        <span>₹{item.price * item.quantity}</span>
-
+              {orders.length === 0 ? (
+                <div className="dashboard-empty-state">
+                  <h3>No orders yet</h3>
+                  <p>Your completed orders will appear here.</p>
+                  <button onClick={() => navigate("/")}>Start Ordering</button>
+                </div>
+              ) : (
+                <div className="orders-grid">
+                  {orders.map((order) => (
+                    <div className="order-card" key={order._id}>
+                      <div className="order-header">
+                        <span className="order-id">
+                          Order #{order._id.slice(-6).toUpperCase()}
+                        </span>
+                        <span className="order-status">{order.status}</span>
                       </div>
 
-                    ))}
+                      <p className="order-date">
+                        {new Date(order.createdAt).toLocaleString()}
+                      </p>
 
-                  </div>
+                      <div className="order-items">
+                        {order.items.map((item, index) => (
+                          <div className="order-item" key={`${order._id}-${index}`}>
+                            <span>{item.name} x{item.quantity}</span>
+                            <span>₹{item.price * item.quantity}</span>
+                          </div>
+                        ))}
+                      </div>
 
-                  <div className="order-total">
-
-                    <span>Total</span>
-                    <span>₹{order.total}</span>
-
-                  </div>
-
+                      <div className="order-meta">
+                        <div>
+                          <span>Payment</span>
+                          <strong>{order.paymentMethod}</strong>
+                        </div>
+                        <div>
+                          <span>Total</span>
+                          <strong>₹{order.total}</strong>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-
-              ))}
-
+              )}
             </>
-
           )}
-
-          {/* EDIT PROFILE */}
 
           {activeTab === "profile" && (
+            <form className="profile-form" onSubmit={handleProfileSave}>
+              <div className="form-heading">
+                <h2>Edit Profile</h2>
+                <p>Update your name or password.</p>
+              </div>
 
-            <>
-              <h1>Edit Profile</h1>
+              <div className="form-group">
+                <label>Full Name</label>
+                <input
+                  name="name"
+                  defaultValue={user?.name}
+                  required
+                />
+              </div>
 
-              <form className="profile-form" onSubmit={handleProfileSave}>
+              <div className="form-group">
+                <label>Email</label>
+                <input value={user?.email || ""} readOnly />
+              </div>
 
-                <div className="form-group">
-                  <label>Full Name</label>
-                  <input
-                    name="name"
-                    defaultValue={user?.name}
-                    required
-                  />
-                </div>
+              <div className="form-group">
+                <label>New Password</label>
+                <input
+                  name="password"
+                  type="password"
+                  placeholder="Enter new password"
+                />
+              </div>
 
-                <div className="form-group">
-                  <label>Email</label>
-                  <input
-                    value={user?.email}
-                    readOnly
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label>New Password</label>
-                  <input
-                    name="password"
-                    type="password"
-                    placeholder="Enter new password"
-                  />
-                </div>
-
-                <button type="submit" className="save-profile-btn">
-                  Save Changes
-                </button>
-
-              </form>
-
-            </>
-
+              <button type="submit" className="save-profile-btn">
+                Save Changes
+              </button>
+            </form>
           )}
-
-        </div>
-
+        </section>
       </div>
 
-    </div>
+      {addressPendingDelete && (
+        <div
+          className="dashboard-modal-overlay"
+          onClick={() => setAddressPendingDelete(null)}
+        >
+          <div
+            className="dashboard-confirm-modal"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <span className="dashboard-confirm-tag">Delete Address</span>
+            <h3>Remove this saved address?</h3>
+            <p>
+              {addressPendingDelete.block} • Floor {addressPendingDelete.floor} • Room {addressPendingDelete.room}
+            </p>
+            <p className="dashboard-confirm-note">
+              This action cannot be undone.
+            </p>
 
+            <div className="dashboard-confirm-actions">
+              <button
+                type="button"
+                className="edit-btn"
+                onClick={() => setAddressPendingDelete(null)}
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                className="delete-btn"
+                onClick={() => handleDelete(addressPendingDelete._id)}
+              >
+                Delete Address
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
 

@@ -1,39 +1,98 @@
+import { useEffect, useRef } from "react";
+import { Route, Routes, useLocation } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 import Navbar from "./components/navbar";
-import Hero from "./components/Hero";
+import Footer from "./components/Footer";
+import ProtectedRoute from "./components/ProtectedRoute";
+import Home from "./pages/Home";
 import About from "./pages/About";
-import Canteens from "./components/Canteens";
 import Menu from "./pages/Menu";
 import Dashboard from "./pages/Dashboard";
 import Checkout from "./pages/Checkout";
 import OrderSuccess from "./pages/OrderSuccess";
-import Footer from "./components/Footer";
+import "./App.css";
 
-import { Routes, Route } from "react-router-dom";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+const routeOrder = {
+  "/": 0,
+  "/about": 1,
+  "/menu": 2,
+  "/dashboard": 3,
+  "/checkout": 4,
+  "/order-success": 5
+};
+
+const getRouteRank = (pathname) => {
+  if (pathname.startsWith("/menu/")) {
+    return routeOrder["/menu"];
+  }
+
+  return routeOrder[pathname] ?? 0;
+};
 
 function App() {
+  const location = useLocation();
+  const previousRankRef = useRef(getRouteRank(location.pathname));
+  const currentRank = getRouteRank(location.pathname);
+  const transitionDirection =
+    currentRank >= previousRankRef.current ? "forward" : "backward";
+
+  useEffect(() => {
+    previousRankRef.current = currentRank;
+  }, [currentRank]);
+
+  useEffect(() => {
+    if (location.hash) {
+      const elementId = location.hash.replace("#", "");
+
+      requestAnimationFrame(() => {
+        const targetElement = document.getElementById(elementId);
+        if (targetElement) {
+          targetElement.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      });
+
+      return;
+    }
+
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+  }, [location.hash, location.pathname, location.search]);
+
   return (
-    <>
+    <div className="app-shell">
       <Navbar />
 
-      <Routes>
-        {/* Home Page */}
-        <Route path="/" element={<><Hero /><Canteens /></>} />
-
-        <Route path="/about" element={<About />} />
-        {/* Menu Page */}
-        <Route path="/menu/:canteenName" element={<Menu />} />
-        {/* Dashboard Page */}
-        <Route path="/dashboard" element={<Dashboard />} />
-        {/* Checkout Page */}
-        <Route path="/checkout" element={<Checkout />} />
-        {/* Order Success */}
-        <Route path="/order-success" element={<OrderSuccess />} />
-      </Routes>
-
+      <div
+        key={location.pathname}
+        className={`route-stage route-stage-${transitionDirection}`}
+      >
+        <Routes location={location}>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/menu/:canteenName" element={<Menu />} />
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/checkout"
+            element={
+              <ProtectedRoute>
+                <Checkout />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="/order-success" element={<OrderSuccess />} />
+        </Routes>
+      </div>
 
       <Footer />
+
       <ToastContainer
         position="top-right"
         autoClose={2500}
@@ -43,7 +102,7 @@ function App() {
         theme="dark"
         className="stubite-toast"
       />
-    </>
+    </div>
   );
 }
 

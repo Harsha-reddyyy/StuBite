@@ -1,67 +1,55 @@
 import "./Menu.css";
 import { useParams, Link } from "react-router-dom";
-import { useEffect, useContext } from "react";
+import { useEffect, useContext, useRef, useState } from "react";
 import { IoArrowBack } from "react-icons/io5";
 import { CartContext } from "../context/CartContext";
+import { toast } from "react-toastify";
+import { apiRequest } from "../lib/api";
+import { getFallbackMenu } from "../lib/catalogFallback";
 
 function Menu() {
 
   const { canteenName } = useParams();
-
   const { cartItems, setCartItems } = useContext(CartContext);
+  const [title, setTitle] = useState("Menu");
+  const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const fallbackToastShownRef = useRef(false);
 
-  // Scroll page to top
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, []);
+    const loadMenu = async () => {
+      setLoading(true);
+      try {
+        const data = await apiRequest(`/api/canteens/${canteenName}/menu`);
+        setTitle(data.canteen?.name || "Menu");
+        setItems(data.items || []);
+        fallbackToastShownRef.current = false;
+      } catch (error) {
+        const fallbackMenu = getFallbackMenu(canteenName);
 
-  // Convert URL name → Proper title
-  const canteenTitles = {
-    maincanteen: "Main Canteen",
-    foodcourt: "Food Court",
-    juicepoint: "Juice Point",
-    pizzahub: "Pizza Hub",
-    southindiancorner: "South Indian Corner",
-    snackstation: "Snack Station"
-  };
+        if (fallbackMenu) {
+          setTitle(fallbackMenu.name);
+          setItems(fallbackMenu.items || []);
 
-  const title = canteenTitles[canteenName] || "Menu";
-
-  const menuData = {
-
-    maincanteen: [
-      {
-        name: "Veg Meal",
-        price: 80,
-        image: "https://images.unsplash.com/photo-1604908176997-125f25cc6f3d"
-      },
-      {
-        name: "Fried Rice",
-        price: 70,
-        image: "https://images.unsplash.com/photo-1603133872878-684f208fb84b"
+          if (!fallbackToastShownRef.current) {
+            toast.warning("Backend unavailable. Showing saved menu.");
+            fallbackToastShownRef.current = true;
+          }
+        } else {
+          setTitle("Menu");
+          setItems([]);
+          toast.error(error.message);
+        }
+      } finally {
+        setLoading(false);
       }
-    ],
+    };
 
-    foodcourt: [
-      {
-        name: "Burger",
-        price: 60,
-        image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd"
-      },
-      {
-        name: "Pizza",
-        price: 120,
-        image: "https://images.unsplash.com/photo-1548365328-8b849b7c7b1a"
-      }
-    ]
+    loadMenu();
+  }, [canteenName]);
 
-  };
-
-  const items = menuData[canteenName] || [];
-
-  // ADD ITEM
   const addToCart = (item) => {
-
     const existingItem = cartItems.find(
       (cartItem) => cartItem.name === item.name
     );
@@ -87,8 +75,6 @@ function Menu() {
 
   };
 
-
-  // REMOVE ITEM
   const removeFromCart = (itemName) => {
 
     const existingItem = cartItems.find(
@@ -119,8 +105,6 @@ function Menu() {
 
   };
 
-
-  // GET ITEM QUANTITY
   const getItemQuantity = (itemName) => {
 
     const item = cartItems.find(
@@ -143,8 +127,9 @@ function Menu() {
       <h1>{title} Menu</h1>
 
       <div className="menu-grid">
+        {loading && <p>Loading menu...</p>}
 
-        {items.map((item, index) => (
+        {!loading && items.map((item, index) => (
           <div className="food-card" key={index}>
 
             <img src={item.image} alt={item.name} />
@@ -194,6 +179,10 @@ function Menu() {
 
           </div>
         ))}
+
+        {!loading && items.length === 0 && (
+          <p>No menu items available for this canteen yet.</p>
+        )}
 
       </div>
 

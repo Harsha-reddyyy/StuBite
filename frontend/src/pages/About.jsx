@@ -1,105 +1,81 @@
+import { Link } from "react-router-dom";
 import "./About.css";
 
 function About() {
-
   return (
-
-    <div className="about-page">
-
-      {/* HERO SECTION */}
+    <main className="about-page">
       <section className="about-hero">
-
-        <h1>About StuBite 🍔</h1>
-
-        <p>
-          StuBite is a smart campus food ordering platform designed
-          for students. It allows you to browse canteen menus,
-          order food instantly, and get it delivered directly to
-          your hostel room without standing in long queues.
-        </p>
-
+        <div className="about-hero-copy">
+          <h1>Campus food ordering made simple.</h1>
+          <p>
+            StuBite helps students order from canteens without standing in line.
+            The goal is simple: less waiting, faster ordering, easier delivery.
+          </p>
+        </div>
       </section>
-
-
-      {/* PROBLEM SECTION */}
 
       <section className="about-section">
+        <div className="about-grid">
+          <article className="about-card">
+            <h2>What StuBite does</h2>
+            <p>
+              Students can browse canteens, add food to cart, save hostel addresses,
+              and place orders from one clean interface.
+            </p>
+          </article>
 
-        <h2>The Problem</h2>
+          <article className="about-card">
+            <h2>Why it matters</h2>
+            <p>
+              College canteens get crowded during peak hours. StuBite reduces the
+              time spent waiting and makes ordering more convenient.
+            </p>
+          </article>
 
-        <p>
-          Students often waste time waiting in long queues at
-          college canteens. During peak hours it becomes difficult
-          to order food quickly and efficiently.
-        </p>
-
+          <article className="about-card">
+            <h2>Who it is for</h2>
+            <p>
+              StuBite is built for students who want a faster way to order food
+              on campus and receive it at their hostel room.
+            </p>
+          </article>
+        </div>
       </section>
 
-
-      {/* SOLUTION SECTION */}
-
-      <section className="about-section">
-
-        <h2>Our Solution</h2>
-
-        <p>
-          StuBite simplifies campus food ordering. Students can
-          explore menus from different canteens, place orders
-          instantly, and receive food directly at their hostel rooms.
-        </p>
-
-      </section>
-
-
-      {/* FEATURES */}
-
-      <section className="features">
-
-        <h2>Features</h2>
-
-        <div className="feature-grid">
-
-          <div className="feature-card">
-            <h3>⚡ Fast Ordering</h3>
-            <p>Order food in minutes from campus canteens.</p>
-          </div>
-
-          <div className="feature-card">
-            <h3>🏠 Hostel Delivery</h3>
-            <p>Get your food delivered directly to your hostels.</p>
-          </div>
-
-          <div className="feature-card">
-            <h3>📱 Smart Dashboard</h3>
-            <p>Manage addresses and track order history easily.</p>
-          </div>
-
-          <div className="feature-card">
-            <h3>💳 Easy Payments</h3>
-            <p>Pay using Cash on Delivery or UPI.</p>
-          </div>
-
+      <section className="about-flow">
+        <div className="about-section-heading">
+          <h2>How it works</h2>
         </div>
 
+        <div className="about-flow-grid">
+          <div className="about-flow-step">
+            <span>1</span>
+            <h3>Choose a canteen</h3>
+            <p>Open the canteen you want and view the menu.</p>
+          </div>
+
+          <div className="about-flow-step">
+            <span>2</span>
+            <h3>Add your order</h3>
+            <p>Select food items and review them in your cart.</p>
+          </div>
+
+          <div className="about-flow-step">
+            <span>3</span>
+            <h3>Checkout</h3>
+            <p>Confirm your hostel address and place the order.</p>
+          </div>
+        </div>
       </section>
 
-
-      {/* BUILDER */}
-
-      <section className="about-builder">
-
-        <h2>Built by a Student</h2>
-
-        <p>
-          StuBite was built by <strong>Harshavardhan Reddy</strong>,
-          a BTech student at Marwadi University.
-          This project was created to improve the food ordering
-          experience for students using modern web technologies.
-        </p>
-
+      <section className="about-cta">
+        <h2>Ready to order?</h2>
+        <p>Explore the available canteens and place your next campus order.</p>
+        <Link to="/" className="about-cta-btn">
+          Go to Home
+        </Link>
       </section>
-
-    </div>
+    </main>
   );
 }
 

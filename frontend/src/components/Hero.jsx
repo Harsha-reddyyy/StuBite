@@ -1,29 +1,23 @@
 import "./Hero.css";
 
 function Hero() {
-
   const scrollToCanteens = () => {
     const section = document.getElementById("canteens");
-    section.scrollIntoView({ behavior: "smooth" });
+    section?.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
     <section className="hero">
-      <div className="hero-left">
-        <h1>
-          Skip the Queue,
-          <br />
-          Order from Your Hostel 🍔
-        </h1>
-
-        <p>
-          StuBite lets college students order food easily from campus
-          canteens.
-        </p>
-
-        <button className="hero-btn" onClick={scrollToCanteens}>
-          Order Now
-        </button>
+      <div className="hero-shell">
+        <div className="hero-copy">
+          <h1>Order canteen food from your hostel room.</h1>
+          <p>
+            Choose a campus canteen, add your items, and place your order in a few simple steps.
+          </p>
+          <button className="hero-btn" onClick={scrollToCanteens}>
+            Explore Canteens
+          </button>
+        </div>
       </div>
     </section>
   );

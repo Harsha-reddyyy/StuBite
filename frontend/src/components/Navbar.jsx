@@ -1,19 +1,29 @@
-import { Link } from "react-router-dom";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
+import { useContext, useEffect, useRef, useState } from "react";
+import {
+  IoChevronDown,
+  IoGridOutline,
+  IoLogOutOutline,
+  IoPersonCircleOutline,
+  IoReceiptOutline,
+  IoCartOutline
+} from "react-icons/io5";
+
 import logo from "../assets/stubite-logo.png";
 import "./Navbar.css";
 import LoginModal from "./LoginModal";
-import { CartContext } from "../context/CartContext";
 import CartSidebar from "./CartSidebar";
-
-import { useState, useEffect, useContext, useRef } from "react";
-import { IoPersonCircleOutline, IoCartOutline } from "react-icons/io5";
+import { CartContext } from "../context/CartContext";
+import { useAuth } from "../context/AuthContext";
 
 function Navbar() {
-
   const { cartItems } = useContext(CartContext);
+  const { user, logout } = useAuth();
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const [loginOpen, setLoginOpen] = useState(false);
-  const [user, setUser] = useState(null);
+  const [authView, setAuthView] = useState("register");
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const profileRef = useRef(null);
@@ -24,117 +34,170 @@ function Navbar() {
   );
 
   useEffect(() => {
-
-    const savedUser = localStorage.getItem("stubiteUser");
-
-    if (savedUser) {
-      setUser(JSON.parse(savedUser));
-    }
-
-  }, []);
-  useEffect(() => {
-
     const handleClickOutside = (event) => {
-      if (
-        profileRef.current &&
-        !profileRef.current.contains(event.target)
-      ) {
+      if (profileRef.current && !profileRef.current.contains(event.target)) {
         setProfileOpen(false);
       }
     };
 
     document.addEventListener("mousedown", handleClickOutside);
-
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-
   }, []);
 
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const auth = params.get("auth");
+
+    if (!user && (auth === "login" || auth === "register")) {
+      setAuthView(auth);
+      setLoginOpen(true);
+    }
+  }, [location.search, user]);
+
+  const clearAuthQuery = () => {
+    const params = new URLSearchParams(location.search);
+    params.delete("auth");
+    params.delete("redirect");
+
+    navigate(
+      {
+        pathname: location.pathname,
+        search: params.toString() ? `?${params.toString()}` : ""
+      },
+      { replace: true }
+    );
+  };
+
+  const handleOpenAuth = (nextView = "register") => {
+    setAuthView(nextView);
+    setLoginOpen(true);
+  };
+
+  const handleCloseAuth = () => {
+    setLoginOpen(false);
+
+    const params = new URLSearchParams(location.search);
+    if (params.has("auth") || params.has("redirect")) {
+      clearAuthQuery();
+    }
+  };
+
+  const handleAuthSuccess = () => {
+    const params = new URLSearchParams(location.search);
+    const redirect = params.get("redirect");
+
+    if (params.has("auth") || params.has("redirect")) {
+      clearAuthQuery();
+    }
+
+    if (redirect && redirect.startsWith("/")) {
+      navigate(redirect, { replace: true });
+      return;
+    }
+
+    navigate("/dashboard", { replace: true });
+  };
+
   const handleLogout = () => {
-    localStorage.removeItem("stubiteUser");
-    setUser(null);
+    logout();
     setProfileOpen(false);
+    navigate("/", { replace: true });
   };
 
   return (
     <>
       <nav className="navbar">
-
-        <div className="nav-left">
-          <Link to="/">
-            <img src={logo} alt="StuBite Logo" className="logo-img" />
-          </Link>
-        </div>
+        <Link to="/" className="brand-link">
+          <img src={logo} alt="StuBite Logo" className="logo-img" />
+          <span className="brand-title">StuBite</span>
+        </Link>
 
         <div className="nav-center">
-          <Link to="/">Home</Link>
-          <Link to="/about">About</Link>
-        </div>
-
-        <div className="cart-icon" onClick={() => setIsCartOpen(true)}>
-          <IoCartOutline className="cart-svg" />
-          <span className="cart-text">Cart</span>
-
-          {cartCount > 0 && (
-            <span className="cart-count">{cartCount}</span>
+          <NavLink to="/" end className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}>
+            Home
+          </NavLink>
+          <NavLink to="/about" className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}>
+            About
+          </NavLink>
+          {user && (
+            <NavLink
+              to="/dashboard"
+              className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}
+            >
+              Dashboard
+            </NavLink>
           )}
         </div>
 
         <div className="nav-right">
+          <button className="cart-button" onClick={() => setIsCartOpen(true)}>
+            <IoCartOutline className="cart-icon-svg" />
+            <span>Cart</span>
+            {cartCount > 0 && <span className="cart-count">{cartCount}</span>}
+          </button>
 
           {user ? (
-
             <div
               ref={profileRef}
               className="profile-section"
-              onClick={() => setProfileOpen(!profileOpen)}
+              onClick={() => setProfileOpen((prev) => !prev)}
             >
-
               <IoPersonCircleOutline className="profile-icon" />
-              <span>{user.name}</span>
+              <span className="profile-name">{user.name}</span>
+              <IoChevronDown className={`profile-caret ${profileOpen ? "open" : ""}`} />
 
               {profileOpen && (
                 <div className="profile-dropdown">
-
-                  <Link to="/dashboard">Dashboard</Link>
-
-                  <Link to="/dashboard">Order History</Link>
-
+                  <Link to="/dashboard" onClick={() => setProfileOpen(false)}>
+                    <IoGridOutline />
+                    <span>Dashboard</span>
+                  </Link>
+                  <Link
+                    to="/dashboard?tab=orders"
+                    onClick={() => setProfileOpen(false)}
+                  >
+                    <IoReceiptOutline />
+                    <span>Orders</span>
+                  </Link>
                   <button onClick={handleLogout}>
-                    Logout
+                    <IoLogOutOutline />
+                    <span>Logout</span>
                   </button>
-
                 </div>
               )}
-
             </div>
-
           ) : (
-
-            <button
-              className="login-btn"
-              onClick={() => setLoginOpen(true)}
-            >
-              Login
-            </button>
-
+            <div className="guest-actions">
+              <button
+                className="ghost-auth-btn"
+                onClick={() => handleOpenAuth("login")}
+              >
+                Login
+              </button>
+              <button
+                className="login-btn"
+                onClick={() => handleOpenAuth("register")}
+              >
+                Register
+              </button>
+            </div>
           )}
-
         </div>
-
       </nav>
 
       <LoginModal
         isOpen={loginOpen}
-        onClose={() => setLoginOpen(false)}
-        onLogin={setUser}
+        onClose={handleCloseAuth}
+        initialView={authView}
+        onAuthSuccess={handleAuthSuccess}
       />
 
       <CartSidebar
         isOpen={isCartOpen}
         closeCart={() => setIsCartOpen(false)}
-        openLogin={() => setLoginOpen(true)}
+        openLogin={() => handleOpenAuth("login")}
       />
     </>
   );

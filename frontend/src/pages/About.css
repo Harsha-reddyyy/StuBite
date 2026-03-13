@@ -1,83 +1,167 @@
-.about-page{
-padding:80px 10%;
-color:white;
+.about-page {
+  min-height: 100vh;
+  padding: 118px 24px 56px;
+  background:
+    radial-gradient(circle at top right, rgba(255, 122, 0, 0.14), transparent 26%),
+    radial-gradient(circle at top left, rgba(255, 178, 91, 0.08), transparent 18%),
+    linear-gradient(180deg, #0a0f18 0%, #0f141e 100%);
+  color: white;
 }
 
-.about-hero{
-text-align:center;
-margin-bottom:80px;
+.about-hero,
+.about-section,
+.about-flow,
+.about-cta {
+  width: min(1120px, 100%);
+  margin: 0 auto;
 }
 
-.about-hero h1{
-font-size:42px;
-margin-bottom:20px;
+.about-hero {
+  padding: 22px 0 52px;
 }
 
-.about-hero p{
-font-size:18px;
-color:#b5b5b5;
-max-width:700px;
-margin:auto;
-line-height:1.6;
+.about-hero-copy {
+  max-width: 760px;
+  padding: 34px;
+  border-radius: 28px;
+  background: rgba(17, 23, 35, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 22px 54px rgba(0, 0, 0, 0.2);
 }
 
-.about-section{
-margin-bottom:60px;
+.about-hero h1 {
+  margin-bottom: 16px;
+  font-size: clamp(36px, 6vw, 60px);
+  line-height: 1.08;
 }
 
-.about-section h2{
-font-size:28px;
-margin-bottom:10px;
+.about-hero p,
+.about-card p,
+.about-flow-step p,
+.about-cta p {
+  color: #a8b1c8;
+  line-height: 1.7;
+  font-size: 16px;
 }
 
-.about-section p{
-color:#b5b5b5;
-line-height:1.6;
+.about-grid,
+.about-flow-grid {
+  display: grid;
+  gap: 20px;
 }
 
-.features{
-margin-top:60px;
+.about-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
-.features h2{
-text-align:center;
-margin-bottom:40px;
+.about-card,
+.about-flow-step,
+.about-cta {
+  background: rgba(17, 23, 35, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 22px;
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.2);
+  transition: transform 0.24s ease, border-color 0.24s ease, box-shadow 0.24s ease;
 }
 
-.feature-grid{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-gap:25px;
+.about-card {
+  padding: 24px;
 }
 
-.feature-card{
-background:#1f1f1f;
-padding:25px;
-border-radius:12px;
-transition:0.3s;
+.about-card:hover,
+.about-flow-step:hover,
+.about-cta:hover {
+  transform: translateY(-4px);
+  border-color: rgba(255, 178, 91, 0.22);
+  box-shadow: 0 28px 60px rgba(0, 0, 0, 0.26);
 }
 
-.feature-card:hover{
-transform:translateY(-5px);
-background:#262626;
+.about-card h2 {
+  margin-bottom: 12px;
+  font-size: 24px;
+  color: #ffcc95;
 }
 
-.feature-card h3{
-margin-bottom:10px;
+.about-flow {
+  padding: 54px 0;
 }
 
-.feature-card p{
-color:#b5b5b5;
+.about-section-heading {
+  margin-bottom: 24px;
 }
 
-.about-builder{
-margin-top:80px;
-text-align:center;
+.about-section-heading h2 {
+  font-size: 34px;
 }
 
-.about-builder p{
-max-width:700px;
-margin:auto;
-color:#b5b5b5;
-line-height:1.6;
+.about-flow-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.about-flow-step {
+  padding: 24px;
+}
+
+.about-flow-step span {
+  display: inline-grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  margin-bottom: 14px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(255, 178, 91, 0.26), rgba(255, 122, 0, 0.18));
+  color: #ffb25b;
+  font-weight: 800;
+  box-shadow: 0 10px 24px rgba(255, 122, 0, 0.14);
+}
+
+.about-flow-step h3 {
+  margin-bottom: 10px;
+  font-size: 22px;
+}
+
+.about-cta {
+  padding: 34px 28px;
+  text-align: center;
+}
+
+.about-cta h2 {
+  margin-bottom: 10px;
+  font-size: 32px;
+}
+
+.about-cta p {
+  margin-bottom: 20px;
+}
+
+.about-cta-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 22px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #ffb25b 0%, #ff7a00 100%);
+  color: #10131d;
+  text-decoration: none;
+  font-weight: 800;
+  box-shadow: 0 14px 30px rgba(255, 122, 0, 0.22);
+  transition: transform 0.22s ease, box-shadow 0.22s ease;
+}
+
+.about-cta-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 18px 36px rgba(255, 122, 0, 0.3);
+}
+
+@media (max-width: 960px) {
+  .about-grid,
+  .about-flow-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .about-page {
+    padding: 108px 16px 36px;
+  }
 }

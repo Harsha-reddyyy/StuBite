@@ -43,6 +43,14 @@
   text-align: center;
 }
 
+.reset-helper-text {
+  margin: -4px 0 4px;
+  color: #A0A3BD;
+  font-size: 14px;
+  line-height: 1.5;
+  text-align: center;
+}
+
 /* INPUTS */
 .login-modal input {
   padding: 12px;
@@ -73,6 +81,53 @@
 .login-submit:hover {
   background: #ff7d1a;
   transform: translateY(-1px);
+}
+
+.login-submit:disabled {
+  background: #a34d12;
+  cursor: not-allowed;
+  transform: none;
+  opacity: 0.85;
+}
+
+.auth-switch-text {
+  color: #A0A3BD;
+  font-size: 15px;
+  text-align: center;
+}
+
+.auth-switch-btn {
+  background: none;
+  border: none;
+  color: #FF6B00;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.auth-switch-btn:hover {
+  color: #ff7d1a;
+}
+
+.forgot-password-btn,
+.auth-secondary-btn {
+  background: none;
+  border: none;
+  color: #FF6B00;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 0;
+  text-align: center;
+}
+
+.forgot-password-btn {
+  margin-top: -4px;
+}
+
+.forgot-password-btn:hover,
+.auth-secondary-btn:hover {
+  color: #ff7d1a;
 }
 
 /* CLOSE BUTTON */

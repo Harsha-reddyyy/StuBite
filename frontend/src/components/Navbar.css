@@ -1,282 +1,260 @@
-/* NAVBAR */
-
-.navbar{
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:90px;
-
-display:flex;
-align-items:center;
-justify-content:space-between;
-
-padding:0 60px;
-
-background:rgba(0,0,0,0.45);
-backdrop-filter:blur(12px);
-
-z-index:1000;
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  min-height: 84px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 16px 40px;
+  background:
+    linear-gradient(90deg, rgba(255, 122, 0, 0.08), transparent 18%, transparent 82%, rgba(255, 122, 0, 0.08)),
+    rgba(7, 11, 19, 0.86);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.22);
+  z-index: 1000;
 }
 
-
-/* LEFT */
-
-.nav-left{
-display:flex;
-align-items:center;
+.brand-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: white;
+  text-decoration: none;
 }
 
-.logo-img{
-height:65px;
-cursor:pointer;
-transition:transform 0.25s ease;
+.logo-img {
+  height: 50px;
+  width: auto;
 }
 
-.logo-img:hover{
-transform:scale(1.08);
+.brand-title {
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  text-shadow: 0 0 18px rgba(255, 122, 0, 0.18);
 }
 
-
-/* CENTER */
-
-.nav-center{
-display:flex;
-align-items:center;
-gap:40px;
+.nav-center,
+.nav-right,
+.guest-actions {
+  display: flex;
+  align-items: center;
 }
 
-.nav-center a{
-color:white;
-text-decoration:none;
-font-weight:500;
-font-size:20px;
-transition:color 0.25s ease;
+.nav-center {
+  gap: 10px;
 }
 
-.nav-center a:hover{
-color:#FF6B00;
+.nav-right,
+.guest-actions {
+  gap: 12px;
 }
 
-
-/* RIGHT */
-
-.nav-right{
-display:flex;
-align-items:center;
-gap:20px;
+.nav-link {
+  padding: 10px 14px;
+  border-radius: 14px;
+  color: #dbe2f3;
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 700;
+  border: 1px solid transparent;
+  transition: background 0.22s ease, color 0.22s ease, transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
 }
 
-
-/* LOGIN BUTTON */
-
-.login-btn{
-background:#FF6B00;
-color:white;
-border:none;
-padding:10px 22px;
-border-radius:8px;
-font-size:15px;
-cursor:pointer;
-transition:all 0.25s ease;
+.nav-link:hover {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(255, 178, 91, 0.22);
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.16);
 }
 
-.login-btn:hover{
-background:white;
-color:#FF6B00;
-transform:scale(1.05);
+.nav-link.active {
+  background: linear-gradient(135deg, #ffb25b 0%, #ff7a00 100%);
+  color: #131722;
+  box-shadow: 0 12px 28px rgba(255, 122, 0, 0.28);
 }
 
-
-/* CART BUTTON */
-
-.cart-icon{
-position:relative;
-
-display:flex;
-align-items:center;
-gap:8px;
-
-padding:8px 16px;
-background:#ff7a00;
-
-border-radius:8px;
-
-cursor:pointer;
-
-transition:all 0.25s ease;
+.cart-button,
+.login-btn,
+.ghost-auth-btn {
+  border-radius: 14px;
+  padding: 11px 18px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease, background 0.22s ease;
 }
 
-.cart-icon:hover{
-background:#1e1e1e;
-transform:scale(1.05);
+.cart-button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: none;
+  background: linear-gradient(135deg, #ffb25b 0%, #ff7a00 100%);
+  color: #10131d;
+  box-shadow: 0 14px 30px rgba(255, 122, 0, 0.24);
 }
 
-
-/* CART ICON */
-
-.cart-svg{
-font-size:26px;
-color:white;
+.cart-button:hover,
+.login-btn:hover {
+  transform: translateY(-1px) scale(1.01);
+  box-shadow: 0 18px 36px rgba(255, 122, 0, 0.3);
 }
 
-
-/* CART TEXT */
-
-.cart-text{
-color:white;
-font-size:16px;
-font-weight:500;
+.cart-icon-svg {
+  font-size: 20px;
 }
 
-
-/* CART BADGE */
-
-.cart-count{
-position:absolute;
-top:-6px;
-right:-6px;
-
-background:white;
-color:#ff7a00;
-
-font-size:12px;
-font-weight:bold;
-
-padding:3px 6px;
-
-border-radius:50%;
+.cart-count {
+  min-width: 20px;
+  height: 20px;
+  display: grid;
+  place-items: center;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: rgba(16, 19, 29, 0.9);
+  color: white;
+  font-size: 11px;
 }
 
-
-/* PROFILE */
-
-.profile-section{
-position:relative;
-display:flex;
-align-items:center;
-gap:8px;
-
-padding:6px 12px;
-border-radius:8px;
-
-color:white;
-font-size:17px;
-
-cursor:pointer;
-transition:all 0.25s ease;
+.ghost-auth-btn {
+  background: transparent;
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.14);
 }
 
-.profile-section:hover{
-background:#2a2a2a;
-transform:scale(1.05);
+.ghost-auth-btn:hover {
+  transform: translateY(-1px);
+  border-color: rgba(255, 178, 91, 0.32);
+  background: rgba(255, 255, 255, 0.06);
 }
 
-
-/* PROFILE ICON */
-
-.profile-icon{
-font-size:28px;
-transition:transform 0.25s ease;
+.login-btn {
+  border: none;
+  background: linear-gradient(135deg, #ffb25b 0%, #ff7a00 100%);
+  color: #10131d;
 }
 
-.profile-section:hover .profile-icon{
-transform:rotate(8deg) scale(1.1);
+.profile-section {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  cursor: pointer;
+  transition: transform 0.22s ease, background 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
 }
 
-
-/* PROFILE DROPDOWN */
-
-.profile-dropdown{
-position:absolute;
-top:60px;
-right:0;
-
-background:#1c1c1c;
-border-radius:12px;
-
-width:220px;
-
-display:flex;
-flex-direction:column;
-
-padding:10px 0;
-
-box-shadow:0 12px 30px rgba(0,0,0,0.45);
-
-animation:dropdownFade 0.2s ease;
+.profile-section:hover {
+  transform: translateY(-1px);
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 178, 91, 0.2);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.16);
 }
 
+.profile-icon {
+  font-size: 28px;
+  color: #ffb25b;
+}
 
-/* DROPDOWN ITEMS */
+.profile-name {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.profile-caret {
+  font-size: 16px;
+  color: #9ea7bf;
+  transition: transform 0.2s ease;
+}
+
+.profile-caret.open {
+  transform: rotate(180deg);
+}
+
+.profile-dropdown {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  width: 220px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px;
+  background: #131a28;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  box-shadow: 0 18px 36px rgba(0, 0, 0, 0.28);
+  animation: profileDropdownIn 0.18s ease;
+}
 
 .profile-dropdown a,
-.profile-dropdown button{
-
-padding:16px 22px;
-
-text-decoration:none;
-color:white;
-
-background:none;
-border:none;
-
-text-align:left;
-
-cursor:pointer;
-
-font-size:16px;
-font-weight:500;
-
-transition:all 0.25s ease;
+.profile-dropdown button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 11px 12px;
+  border: none;
+  border-radius: 12px;
+  background: transparent;
+  color: white;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
 }
 
 .profile-dropdown a:hover,
-.profile-dropdown button:hover{
-
-background:#2a2a2a;
-
-padding-left:28px;
-
-color:#ff7a00;
-
-transform:scale(1.02);
+.profile-dropdown button:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: #ffcc95;
 }
 
+@keyframes profileDropdownIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
 
-/* ANIMATION */
-
-@keyframes dropdownFade{
-
-from{
-opacity:0;
-transform:translateY(-8px);
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-to{
-opacity:1;
-transform:translateY(0);
+@media (max-width: 960px) {
+  .navbar {
+    padding: 14px 20px;
+  }
+
+  .nav-center {
+    display: none;
+  }
 }
 
-}
+@media (max-width: 640px) {
+  .brand-title,
+  .ghost-auth-btn,
+  .profile-caret {
+    display: none;
+  }
 
+  .navbar {
+    min-height: 76px;
+  }
 
-/* ================= */
-/* RESPONSIVE */
-/* ================= */
-
-@media(max-width:1000px){
-
-.nav-center{
-display:none;
-}
-
-.cart-text{
-display:none;
-}
-
-.navbar{
-padding:0 30px;
-}
-
+  .profile-section {
+    padding: 10px;
+  }
 }

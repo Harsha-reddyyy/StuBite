@@ -33,6 +33,7 @@ function Navbar() {
     0
   );
 
+  // Closing the account menu on outside clicks keeps the dropdown feeling controlled.
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (profileRef.current && !profileRef.current.contains(event.target)) {
@@ -46,6 +47,7 @@ function Navbar() {
     };
   }, []);
 
+  // Query params let protected pages open the auth modal with the right starting view.
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const auth = params.get("auth");
@@ -84,6 +86,7 @@ function Navbar() {
     }
   };
 
+  // After login we either continue the original protected action or send the user to the dashboard.
   const handleAuthSuccess = () => {
     const params = new URLSearchParams(location.search);
     const redirect = params.get("redirect");
@@ -132,6 +135,7 @@ function Navbar() {
         </div>
 
         <div className="nav-right">
+          {/* Cart stays visible for both guests and signed-in users because browsing should feel lightweight. */}
           <button className="cart-button" onClick={() => setIsCartOpen(true)}>
             <IoCartOutline className="cart-icon-svg" />
             <span>Cart</span>
@@ -149,6 +153,7 @@ function Navbar() {
               <IoChevronDown className={`profile-caret ${profileOpen ? "open" : ""}`} />
 
               {profileOpen && (
+                // The account menu keeps the most common signed-in actions within one click.
                 <div className="profile-dropdown">
                   <Link to="/dashboard" onClick={() => setProfileOpen(false)}>
                     <IoGridOutline />

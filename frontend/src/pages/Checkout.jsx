@@ -24,6 +24,7 @@ function Checkout() {
       return;
     }
 
+    // Checkout depends on the latest saved addresses because the default one becomes the delivery target.
     const loadAddresses = async () => {
       try {
         const data = await apiRequest("/api/user/me", {
@@ -50,6 +51,7 @@ function Checkout() {
   const deliveryFee = cartItems.length > 0 ? 10 : 0;
   const total = subtotal + deliveryFee;
 
+  // These guards keep checkout honest before we create an order in MongoDB.
   const placeOrder = async () => {
     if (cartItems.length === 0) {
       toast.error("Your cart is empty 🛒");
@@ -209,6 +211,7 @@ function Checkout() {
       </div>
 
       <div className="checkout-right">
+        {/* Reusing the shared cart summary keeps totals consistent with the cart drawer. */}
         <CartSummary title="Cart Snapshot" />
       </div>
 

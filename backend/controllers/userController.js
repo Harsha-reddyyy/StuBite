@@ -2,12 +2,14 @@ const bcrypt = require("bcryptjs")
 const Order = require("../models/Order")
 const User = require("../models/User")
 
+// Frontend auth state should never receive password hashes or raw Mongo internals.
 const sanitizeUser = (user) => ({
   id: user._id,
   name: user.name,
   email: user.email
 })
 
+// Older orders were embedded on the user document, so we normalize them to the new Order shape here.
 const normalizeLegacyOrder = (order, userId) => ({
   _id: order._id,
   user: userId,
@@ -22,6 +24,7 @@ const normalizeLegacyOrder = (order, userId) => ({
   updatedAt: order.updatedAt
 })
 
+// This keeps order history backward compatible while new orders use the dedicated collection.
 const getUserOrders = async (user) => {
   const persistedOrders = await Order.find({ user: user._id })
     .sort({ createdAt: -1 })
@@ -72,6 +75,7 @@ exports.updateProfile = async (req, res) => {
     }
 
     if (password) {
+      // Profile password changes follow the same hashing rule as registration.
       user.password = await bcrypt.hash(password, 10)
     }
 
@@ -96,6 +100,7 @@ exports.createAddress = async (req, res) => {
       return res.status(404).json({ message: "User not found" })
     }
 
+    // Only one saved address should be default at a time.
     if (isDefault) {
       user.addresses.forEach((address) => {
         address.isDefault = false
@@ -203,6 +208,7 @@ exports.setDefaultAddress = async (req, res) => {
 
     let found = false
 
+    // Setting one address as default automatically clears the flag from the rest.
     user.addresses.forEach((address) => {
       const isMatch = address._id.toString() === addressId
       address.isDefault = isMatch
@@ -264,6 +270,7 @@ exports.createOrder = async (req, res) => {
       return res.status(404).json({ message: "User not found" })
     }
 
+    // Orders store a snapshot of the delivery address so later edits do not rewrite past history.
     const address = user.addresses.id(addressId)
 
     if (!address) {
@@ -286,6 +293,7 @@ exports.createOrder = async (req, res) => {
       }
     })
 
+    // A successful order empties the persisted cart so the next session stays in sync.
     user.cart = []
 
     await user.save()
@@ -343,6 +351,7 @@ exports.replaceCart = async (req, res) => {
       return res.status(404).json({ message: "User not found" })
     }
 
+    // The frontend sends the full latest cart state, so the API replaces rather than patches it.
     user.cart = items
     await user.save()
 

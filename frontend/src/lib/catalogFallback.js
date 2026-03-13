@@ -1,4 +1,5 @@
-// Fallback catalog used when the local API is unavailable.
+// This saved catalog keeps the public browsing experience alive
+// even if the backend is temporarily unavailable during development.
 export const fallbackCatalog = [
   {
     slug: "maincanteen",

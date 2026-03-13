@@ -1,3 +1,4 @@
+/* The hero is intentionally spacious so the first action feels obvious instead of crowded. */
 .hero {
   min-height: 92vh;
   display: flex;

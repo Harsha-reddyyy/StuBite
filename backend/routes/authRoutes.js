@@ -9,6 +9,7 @@ const {
   resetPassword
 } = require("../controllers/authController")
 
+// Auth depends on MongoDB, so we block these routes early if the database is down.
 router.use(dbReadyMiddleware)
 
 router.post("/register", registerUser)

@@ -1,3 +1,4 @@
+/* The footer is treated like a final conversion block, not just a legal strip at the bottom. */
 .footer {
   margin-top: auto;
   padding: 54px 24px 24px;

@@ -1,3 +1,4 @@
+/* Compact cart snapshot used mainly beside the checkout form. */
 .cart-summary {
   position: sticky;
   top: 112px;

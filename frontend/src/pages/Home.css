@@ -1,3 +1,4 @@
+/* The homepage moves from a bold hero into a short explanation and then straight into browsing. */
 .home-page {
   background:
     radial-gradient(circle at top, rgba(255, 122, 0, 0.08), transparent 24%),

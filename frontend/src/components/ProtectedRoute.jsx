@@ -1,6 +1,8 @@
 import { Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
+// Protected routes bounce guests back to the homepage login modal
+// and remember where they originally wanted to go.
 function ProtectedRoute({ children }) {
   const { isAuthenticated } = useAuth();
   const location = useLocation();

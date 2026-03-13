@@ -7,10 +7,12 @@ const { sendPasswordResetCode, isDevResetFallbackEnabled } = require("../utils/m
 const EMAIL_REGEX = /^\S+@\S+\.\S+$/
 const PASSWORD_RESET_CODE_TTL_MS = 10 * 60 * 1000
 
+// Normalizing email in one place avoids duplicate accounts caused by casing or whitespace differences.
 const normalizeEmail = (email = "") => email.trim().toLowerCase()
 const hashResetCode = (code) =>
   crypto.createHash("sha256").update(code).digest("hex")
 
+// Every successful auth response goes through this helper so the frontend gets the same shape on login and register.
 const buildAuthResponse = (user) => {
   const token = jwt.sign(
     {id:user._id},
@@ -28,6 +30,7 @@ const buildAuthResponse = (user) => {
   }
 }
 
+// Reset state is cleared centrally so expired and failed reset flows behave the same way.
 const clearPasswordResetState = async (user) => {
   user.passwordResetCodeHash = null
   user.passwordResetExpiresAt = null
@@ -57,6 +60,7 @@ exports.registerUser = async (req,res)=>{
       return res.status(400).json({message:"User already exists"})
     }
 
+    // Passwords are always stored hashed before they ever reach MongoDB.
     const hashedPassword = await bcrypt.hash(password,10)
     const user = await User.create({
       name,
@@ -94,6 +98,7 @@ exports.loginUser = async (req,res)=>{
       return res.status(400).json({message:"Invalid email or password"})
     }
 
+    // Login checks the hashed password instead of comparing raw strings.
     const isMatch = await bcrypt.compare(password,user.password)
 
     if(!isMatch){
@@ -127,6 +132,7 @@ exports.requestPasswordReset = async (req, res) => {
       })
     }
 
+    // A short code is easier for users to type, so we store only its hash and expiry.
     const code = String(Math.floor(100000 + Math.random() * 900000))
     user.passwordResetCodeHash = hashResetCode(code)
     user.passwordResetExpiresAt = new Date(Date.now() + PASSWORD_RESET_CODE_TTL_MS)
@@ -151,6 +157,7 @@ exports.requestPasswordReset = async (req, res) => {
         })
       }
 
+      // Dev fallback keeps password reset testable even before SMTP is fully configured.
       if (isDevResetFallbackEnabled()) {
         console.log(`[DEV PASSWORD RESET FALLBACK] ${email} -> ${code}`)
         return res.status(200).json({

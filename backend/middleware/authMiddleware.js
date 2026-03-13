@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken")
 
+// Protected routes only trust Bearer tokens that were issued by this backend.
 const authMiddleware = (req, res, next) => {
   const authHeader = req.headers.authorization
 

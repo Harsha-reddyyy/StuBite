@@ -1,6 +1,7 @@
 export const apiBaseUrl =
   import.meta.env.VITE_API_BASE_URL || "";
 
+// These helpers keep network and server errors readable for the UI layer.
 const formatNetworkErrorMessage = (path) => {
   const isAuthRequest = path.startsWith("/api/auth/");
 
@@ -54,6 +55,8 @@ export const apiRequest = async (path, options = {}) => {
     throw new Error(formatNetworkErrorMessage(path));
   }
 
+  // We read the response as text first so we can handle both valid JSON
+  // and unexpected non-JSON error bodies without crashing the app.
   const text = await response.text();
   let data = {};
 

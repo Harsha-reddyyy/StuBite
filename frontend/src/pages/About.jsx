@@ -4,6 +4,7 @@ import "./About.css";
 function About() {
   return (
     <main className="about-page">
+      {/* The About page explains the product in plain language before people ever need the dashboard. */}
       <section className="about-hero">
         <div className="about-hero-copy">
           <h1>Campus food ordering made simple.</h1>
@@ -15,6 +16,7 @@ function About() {
       </section>
 
       <section className="about-section">
+        {/* These cards answer the three first-time-user questions: what, why, and who. */}
         <div className="about-grid">
           <article className="about-card">
             <h2>What StuBite does</h2>
@@ -47,6 +49,7 @@ function About() {
           <h2>How it works</h2>
         </div>
 
+        {/* Keeping the flow to three steps makes the product feel straightforward instead of feature-heavy. */}
         <div className="about-flow-grid">
           <div className="about-flow-step">
             <span>1</span>

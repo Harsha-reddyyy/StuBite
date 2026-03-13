@@ -1,5 +1,6 @@
 const mongoose = require("mongoose")
 
+// Orders are stored separately so history can scale beyond a single user document.
 const orderItemSchema = new mongoose.Schema(
   {
     name: {
@@ -21,6 +22,7 @@ const orderItemSchema = new mongoose.Schema(
   { _id: false }
 )
 
+// deliveredTo stores the address snapshot used at checkout time.
 const orderSchema = new mongoose.Schema(
   {
     user: {

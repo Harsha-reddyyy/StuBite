@@ -4,6 +4,8 @@ import { toast } from "react-toastify";
 import { useAuth } from "../context/AuthContext";
 import { apiRequest } from "../lib/api";
 
+// One modal handles register, login, and forgot-password flows
+// so users do not bounce between multiple separate screens.
 function LoginModal({ isOpen, onClose, initialView = "register", onAuthSuccess }) {
   const { login } = useAuth();
   const [view, setView] = useState(initialView);
@@ -16,6 +18,8 @@ function LoginModal({ isOpen, onClose, initialView = "register", onAuthSuccess }
   const [showForgotPassword, setShowForgotPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // Resetting all fields when the modal opens/closes avoids stale form data
+  // leaking from one auth flow into another.
   const resetForm = () => {
     setName("");
     setEmail("");
@@ -53,6 +57,8 @@ function LoginModal({ isOpen, onClose, initialView = "register", onAuthSuccess }
 
   if (!isOpen) return null;
 
+  // Validation is kept close to submission so each flow can enforce
+  // only the fields it actually needs.
   const handleSubmit = async () => {
     const trimmedName = name.trim();
     const trimmedEmail = email.trim().toLowerCase();
@@ -100,6 +106,8 @@ function LoginModal({ isOpen, onClose, initialView = "register", onAuthSuccess }
     setIsSubmitting(true);
 
     try {
+      // Login, registration, and password reset all use the same request handler,
+      // but each branch still returns the right success message and next step.
       if (view === "forgot") {
         if (resetStep === "request") {
           const data = await apiRequest("/api/auth/forgot-password", {

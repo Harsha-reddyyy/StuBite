@@ -8,7 +8,6 @@ import { apiRequest } from "../lib/api";
 import { getFallbackMenu } from "../lib/catalogFallback";
 
 function Menu() {
-
   const { canteenName } = useParams();
   const { cartItems, setCartItems } = useContext(CartContext);
   const [title, setTitle] = useState("Menu");
@@ -18,6 +17,9 @@ function Menu() {
 
   useEffect(() => {
     window.scrollTo(0, 0);
+
+    // The menu page also has a saved fallback so students can still
+    // browse items during temporary backend issues.
     const loadMenu = async () => {
       setLoading(true);
       try {
@@ -49,6 +51,8 @@ function Menu() {
     loadMenu();
   }, [canteenName]);
 
+  // These helpers keep cart interactions readable in the menu grid
+  // instead of mixing quantity logic directly into the JSX.
   const addToCart = (item) => {
     const existingItem = cartItems.find(
       (cartItem) => cartItem.name === item.name

@@ -7,6 +7,7 @@ function Home() {
     <main className="home-page">
       <Hero />
 
+      {/* This section gives first-time visitors the full product flow before they start browsing. */}
       <section className="home-section">
         <div className="section-heading">
           <h2>How StuBite Works</h2>
@@ -31,6 +32,7 @@ function Home() {
         </div>
       </section>
 
+      {/* The canteen list is the main action area of the homepage. */}
       <Canteens />
     </main>
   );

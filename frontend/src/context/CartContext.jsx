@@ -13,6 +13,7 @@ import { toast } from "react-toastify";
 export const CartContext = createContext();
 const GUEST_CART_STORAGE_KEY = "stubite-guest-cart";
 
+// Guests keep their cart locally until they sign in.
 const getStoredGuestCart = () => {
   if (typeof window === "undefined") {
     return [];
@@ -38,6 +39,7 @@ export const CartProvider = ({ children }) => {
   const lastSyncedCartRef = useRef("[]");
   const activeRequestRef = useRef(false);
 
+  // Expose one setter so cart updates stay consistent everywhere.
   const setCartItems = useCallback((updater) => {
     setCartItemsState((prev) => {
       const nextValue =
@@ -46,6 +48,7 @@ export const CartProvider = ({ children }) => {
     });
   }, []);
 
+  // Guests store cart changes locally, while signed-in users rely on the API.
   useEffect(() => {
     if (!isAuthenticated || !token) {
       if (typeof window !== "undefined") {
@@ -62,6 +65,7 @@ export const CartProvider = ({ children }) => {
     }
   }, [cartItems, isAuthenticated, token]);
 
+  // Once a user is authenticated, every cart change is pushed to the backend.
   useEffect(() => {
     if (!isAuthenticated || !token) {
       lastSyncedCartRef.current = JSON.stringify(cartItems);
@@ -100,6 +104,8 @@ export const CartProvider = ({ children }) => {
     syncCart();
   }, [cartItems, isAuthenticated, token]);
 
+  // On login we either merge the guest cart into the account or pull
+  // the already saved server cart if there was nothing local to merge.
   useEffect(() => {
     if (!isAuthenticated || !token) {
       const guestCart = getStoredGuestCart();

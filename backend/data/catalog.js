@@ -1,3 +1,4 @@
+// This seeded catalog keeps the public browsing flow working until canteens and menu items move into MongoDB.
 const canteens = [
   {
     slug: "maincanteen",

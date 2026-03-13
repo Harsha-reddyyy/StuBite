@@ -1,3 +1,4 @@
+/* The app shell only handles page-level structure and horizontal route transitions. */
 #root,
 .app-shell {
   min-height: 100vh;

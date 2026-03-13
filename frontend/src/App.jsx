@@ -14,6 +14,8 @@ import Checkout from "./pages/Checkout";
 import OrderSuccess from "./pages/OrderSuccess";
 import "./App.css";
 
+// We use a simple route ranking system to decide which direction
+// the page transition should move when users navigate around the app.
 const routeOrder = {
   "/": 0,
   "/about": 1,
@@ -42,6 +44,8 @@ function App() {
     previousRankRef.current = currentRank;
   }, [currentRank]);
 
+  // On normal route changes, we reset the page to the top.
+  // If the URL includes a hash, we scroll straight to that section instead.
   useEffect(() => {
     if (location.hash) {
       const elementId = location.hash.replace("#", "");
@@ -63,6 +67,7 @@ function App() {
     <div className="app-shell">
       <Navbar />
 
+      {/* Keying by pathname lets each route transition animate cleanly. */}
       <div
         key={location.pathname}
         className={`route-stage route-stage-${transitionDirection}`}
@@ -93,6 +98,7 @@ function App() {
 
       <Footer />
 
+      {/* One shared toast container keeps messaging consistent across the app. */}
       <ToastContainer
         position="top-right"
         autoClose={2500}

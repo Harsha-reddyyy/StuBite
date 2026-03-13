@@ -45,6 +45,7 @@ function Dashboard() {
     }
   };
 
+  // Query params keep direct links like /dashboard?tab=orders working after refresh.
   useEffect(() => {
     const nextTab = searchParams.get("tab");
 
@@ -69,6 +70,7 @@ function Dashboard() {
     setSearchParams({ tab });
   };
 
+  // One dashboard request hydrates the user profile, addresses, and order history together.
   useEffect(() => {
     if (!token) {
       navigate("/");
@@ -105,6 +107,7 @@ function Dashboard() {
     setShowForm(false);
   };
 
+  // Phone cleanup here prevents accidental spaces or symbols from leaking into saved address data.
   const handleChange = (event) => {
     const { name, value } = event.target;
 
@@ -114,6 +117,7 @@ function Dashboard() {
     }));
   };
 
+  // The same form handles both create and edit so the address flow stays predictable.
   const handleSaveAddress = async (event) => {
     event.preventDefault();
 
@@ -146,6 +150,7 @@ function Dashboard() {
     }
   };
 
+  // Editing simply preloads the existing address into the shared form.
   const handleEdit = (address) => {
     setEditingAddressId(address._id);
     setFormData({
@@ -158,6 +163,7 @@ function Dashboard() {
     setShowForm(true);
   };
 
+  // Delete is confirmed in a custom modal so users do not lose an address with an accidental click.
   const handleDelete = async (addressId) => {
     try {
       const data = await apiRequest(`/api/user/addresses/${addressId}`, {
@@ -212,6 +218,7 @@ function Dashboard() {
     }
   };
 
+  // Profile updates are lightweight by design: name changes are common, password changes are optional.
   const handleProfileSave = async (event) => {
     event.preventDefault();
 
@@ -548,6 +555,7 @@ function Dashboard() {
           className="dashboard-modal-overlay"
           onClick={() => setAddressPendingDelete(null)}
         >
+          {/* The confirm modal repeats the address details so users know exactly what they are deleting. */}
           <div
             className="dashboard-confirm-modal"
             onClick={(event) => event.stopPropagation()}

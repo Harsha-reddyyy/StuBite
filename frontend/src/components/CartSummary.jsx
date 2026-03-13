@@ -3,9 +3,10 @@ import { useContext } from "react";
 import { CartContext } from "../context/CartContext";
 
 function CartSummary({ title = "Your Cart" }) {
-
   const { cartItems, setCartItems } = useContext(CartContext);
 
+  // This compact summary is reused in checkout, so the controls mirror
+  // the cart drawer without duplicating cart state elsewhere.
   const increaseQty = (itemName) => {
     const updated = cartItems.map((item) =>
       item.name === itemName
@@ -27,16 +28,14 @@ function CartSummary({ title = "Your Cart" }) {
     setCartItems(updated);
   };
 
-  // Subtotal
+  // Totals are derived from the live cart state on every render.
   const subtotal = cartItems.reduce(
     (sum, item) => sum + item.price * item.quantity,
     0
   );
 
-  // Delivery Fee
   const deliveryFee = cartItems.length > 0 ? 10 : 0;
 
-  // Final Total
   const total = subtotal + deliveryFee;
 
   return (

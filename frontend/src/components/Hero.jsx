@@ -1,6 +1,7 @@
 import "./Hero.css";
 
 function Hero() {
+  // The hero only needs one job: move first-time visitors straight to the canteen list.
   const scrollToCanteens = () => {
     const section = document.getElementById("canteens");
     section?.scrollIntoView({ behavior: "smooth" });

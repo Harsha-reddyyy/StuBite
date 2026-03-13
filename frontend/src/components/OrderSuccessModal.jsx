@@ -1,13 +1,11 @@
 import "./OrderSuccessModal.css";
 
 function OrderSuccessModal({ isOpen, closeModal }) {
-
   if (!isOpen) return null;
 
   return (
-
     <div className="success-overlay">
-
+      {/* This modal is intentionally brief so checkout ends on a clear success state, not another task list. */}
       <div className="success-modal">
         <div className="success-badge">Order Confirmed</div>
 
@@ -27,11 +25,8 @@ function OrderSuccessModal({ isOpen, closeModal }) {
         >
           Continue Ordering
         </button>
-
       </div>
-
     </div>
-
   );
 }
 

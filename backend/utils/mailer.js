@@ -3,8 +3,10 @@ const nodemailer = require("nodemailer")
 const isDevResetFallbackEnabled = () =>
   process.env.ALLOW_DEV_PASSWORD_RESET === "true"
 
+// Trimming env values avoids invisible whitespace issues when .env entries are copied manually.
 const readEnv = (key) => process.env[key]?.trim()
 
+// SMTP setup is isolated here so auth logic only worries about when to send, not how to connect.
 const createTransporter = () => {
   const SMTP_HOST = readEnv("SMTP_HOST")
   const SMTP_PORT = readEnv("SMTP_PORT")
@@ -26,6 +28,7 @@ const createTransporter = () => {
   })
 }
 
+// In development we can fall back to a console code, but production should use SMTP delivery.
 const sendPasswordResetCode = async ({ email, code }) => {
   if (isDevResetFallbackEnabled() && !readEnv("SMTP_HOST")) {
     console.log(`[DEV PASSWORD RESET] ${email} -> ${code}`)

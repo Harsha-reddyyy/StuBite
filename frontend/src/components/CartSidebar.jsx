@@ -6,11 +6,12 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 function CartSidebar({ isOpen, closeCart, openLogin }) {
-
   const { cartItems, setCartItems } = useContext(CartContext);
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
 
+  // Quantity controls stay local here because the shared cart context
+  // already handles persistence and backend syncing behind the scenes.
   const increaseQty = (itemName) => {
 
     const updated = cartItems.map((item) =>
@@ -42,6 +43,8 @@ function CartSidebar({ isOpen, closeCart, openLogin }) {
 
   if (!isOpen) return null;
 
+  // Checkout guards live here so users get immediate feedback from the drawer
+  // before we navigate away or ask them to authenticate.
   const handleCheckout = () => {
     if (cartItems.length === 0) {
       toast.warning("Your cart is empty 🛒");

@@ -11,6 +11,8 @@ function Canteens() {
   const [errorMessage, setErrorMessage] = useState("");
   const fallbackToastShownRef = useRef(false);
 
+  // The public canteen list should still render during backend outages,
+  // so we swap to a saved catalog instead of leaving the homepage empty.
   const loadCanteens = useCallback(async () => {
     setLoading(true);
     setErrorMessage("");

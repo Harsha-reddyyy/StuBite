@@ -5,6 +5,7 @@ function Footer() {
   return (
     <footer className="footer">
       <div className="footer-inner">
+        {/* The footer repeats the product promise and gives users one obvious next action. */}
         <div className="footer-brand">
           <h2>StuBite</h2>
           <p>Fast campus food ordering with a cleaner student experience.</p>
@@ -16,6 +17,7 @@ function Footer() {
         <div className="footer-column">
           <h3>Navigation</h3>
           <div className="footer-links">
+            {/* These links mirror the main navigation so the footer still feels useful. */}
             <Link to="/">Home</Link>
             <Link to="/about">About</Link>
             <Link to="/dashboard">Dashboard</Link>

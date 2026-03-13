@@ -1,5 +1,6 @@
 const mongoose = require("mongoose")
 
+// Addresses stay embedded because they belong only to one user and are edited together.
 const addressSchema = new mongoose.Schema(
   {
     name: {
@@ -30,6 +31,7 @@ const addressSchema = new mongoose.Schema(
   { _id: true }
 )
 
+// This legacy order schema remains only for backward compatibility with older saved user documents.
 const orderItemSchema = new mongoose.Schema(
   {
     name: {
@@ -92,6 +94,7 @@ const orderSchema = new mongoose.Schema(
   }
 )
 
+// Cart items stay embedded because the UI always fetches and replaces the whole cart at once.
 const cartItemSchema = new mongoose.Schema(
   {
     name: {
@@ -113,6 +116,7 @@ const cartItemSchema = new mongoose.Schema(
   { _id: false }
 )
 
+// The user document holds auth state plus the student-specific data needed at checkout.
 const userSchema = new mongoose.Schema({
   name:{
     type:String,

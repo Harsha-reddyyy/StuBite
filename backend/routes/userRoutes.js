@@ -17,6 +17,7 @@ const {
 
 const router = express.Router()
 
+// User routes are both database-backed and identity-protected, so we stack those guards up front.
 router.use(dbReadyMiddleware)
 router.use(authMiddleware)
 

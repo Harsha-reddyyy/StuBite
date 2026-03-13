@@ -13,6 +13,7 @@ const app = express();
 
 /* ---------------- CORS ---------------- */
 
+// Localhost and 127.0.0.1 are both allowed so the frontend still works across different dev setups.
 const allowedOriginPatterns = [
   /^http:\/\/localhost:\d+$/,
   /^http:\/\/127\.0\.0\.1:\d+$/
@@ -36,6 +37,7 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 app.use((req, res, next) => {
+  // Browsers send preflight OPTIONS calls before some requests, so we finish those early.
   if (req.method === "OPTIONS") {
     return res.sendStatus(204);
   }
@@ -49,6 +51,7 @@ app.use(express.json());
 
 /* ---------------- ROUTES ---------------- */
 
+// Public catalog routes come first, then auth, then JWT-protected user APIs.
 app.use("/api", catalogRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
@@ -76,6 +79,7 @@ app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
 });
 
+// We start listening immediately, then report DB state separately so health checks stay reachable.
 connectDB()
   .then((connected) => {
     if (connected) {

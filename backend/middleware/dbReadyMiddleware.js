@@ -1,5 +1,6 @@
 const { isDbConnected } = require("../config/db")
 
+// This keeps database-backed routes from failing noisily when Atlas is unavailable.
 const dbReadyMiddleware = (req, res, next) => {
   if (!isDbConnected()) {
     return res.status(503).json({

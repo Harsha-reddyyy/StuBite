@@ -9,6 +9,7 @@ import {
 const AuthContext = createContext(null);
 const AUTH_STORAGE_KEY = "stubite-auth";
 
+// Restore persisted auth once on startup so refreshes do not log users out.
 const getStoredAuth = () => {
   if (typeof window === "undefined") {
     return { user: null, token: null };
@@ -37,6 +38,8 @@ export const AuthProvider = ({ children }) => {
   const [authState, setAuthState] = useState(getStoredAuth);
   const { user, token } = authState;
 
+  // These helpers keep auth updates centralized instead of scattered
+  // across individual components like the modal, navbar, and dashboard.
   const login = useCallback(({ user: nextUser, token: nextToken }) => {
     setAuthState({
       user: nextUser,
@@ -58,6 +61,7 @@ export const AuthProvider = ({ children }) => {
     }));
   }, []);
 
+  // Persist auth state in localStorage so the session survives refreshes.
   useEffect(() => {
     if (typeof window === "undefined") {
       return;
@@ -74,6 +78,8 @@ export const AuthProvider = ({ children }) => {
     window.localStorage.removeItem(AUTH_STORAGE_KEY);
   }, [token, user]);
 
+  // Any API response that marks the token invalid can broadcast this event,
+  // and the provider clears the session in one place.
   useEffect(() => {
     if (typeof window === "undefined") {
       return undefined;

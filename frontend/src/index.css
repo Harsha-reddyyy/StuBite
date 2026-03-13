@@ -1,3 +1,4 @@
+/* Global defaults keep the visual language consistent before component-specific styles take over. */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
 
 
@@ -39,7 +40,7 @@ button{
 font-weight:500;
 }
 
-/* STUBITE TOAST */
+/* Toast styles are centralized here so success, warning, and error feedback always feels related. */
 
 .stubite-toast .Toastify__toast{
 

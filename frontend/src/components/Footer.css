@@ -117,7 +117,17 @@
   font-size: 14px;
 }
 
+@media (max-width: 900px) {
+  .footer-inner {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 @media (max-width: 720px) {
+  .footer {
+    padding-inline: 16px;
+  }
+
   .footer-inner {
     grid-template-columns: 1fr;
     padding: 24px;

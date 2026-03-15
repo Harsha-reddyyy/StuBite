@@ -33,6 +33,7 @@
 .summary-left h4 {
   margin-bottom: 6px;
   font-size: 16px;
+  word-break: break-word;
 }
 
 .summary-left p {
@@ -80,4 +81,17 @@
 .empty-cart {
   color: #a8b1c8;
   line-height: 1.7;
+}
+
+@media (max-width: 720px) {
+  .cart-summary {
+    position: static;
+    padding: 22px 20px;
+    border-radius: 24px;
+  }
+
+  .summary-item {
+    align-items: flex-start;
+    flex-direction: column;
+  }
 }

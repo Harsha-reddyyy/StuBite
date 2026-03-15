@@ -2,39 +2,27 @@
 /* OVERLAY BACKGROUND */
 .login-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-
-  width: 100vw;
-  height: 100vh;
-
+  inset: 0;
   background: rgba(0,0,0,0.75);
-
   display: flex;
   justify-content: center;
   align-items: center;
-
+  padding: 20px 16px;
   z-index: 9999;
-
   animation: fadeIn 0.25s ease;
 }
 
 /* MODAL BOX */
 .login-modal {
   position: relative;
-
-  width: 420px;
+  width: min(420px, 100%);
   background: #1A1D24;
-
   padding: 40px;
   border-radius: 16px;
-
   display: flex;
   flex-direction: column;
   gap: 16px;
-
   box-shadow: 0 20px 60px rgba(0,0,0,0.7);
-
   animation: scaleIn 0.25s ease;
 }
 
@@ -157,6 +145,17 @@
   font-size: 18px;
   color: #A0A3BD;
   text-align: center;
+}
+
+@media (max-width: 640px) {
+  .login-modal {
+    padding: 28px 20px 22px;
+  }
+
+  .close-btn {
+    top: 14px;
+    right: 16px;
+  }
 }
 
 /* ANIMATIONS */

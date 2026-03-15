@@ -80,6 +80,7 @@
 .cart-left h4 {
   margin-bottom: 6px;
   font-size: 17px;
+  word-break: break-word;
 }
 
 .cart-left p {
@@ -186,6 +187,16 @@
 
 @media (max-width: 640px) {
   .cart-sidebar {
+    width: 100%;
     padding: 96px 16px 16px;
+  }
+
+  .cart-item {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .cart-qty {
+    width: fit-content;
   }
 }

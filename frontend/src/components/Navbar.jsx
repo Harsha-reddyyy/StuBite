@@ -2,8 +2,10 @@ import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useContext, useEffect, useRef, useState } from "react";
 import {
   IoChevronDown,
+  IoCloseOutline,
   IoGridOutline,
   IoLogOutOutline,
+  IoMenuOutline,
   IoPersonCircleOutline,
   IoReceiptOutline,
   IoCartOutline
@@ -26,6 +28,7 @@ function Navbar() {
   const [authView, setAuthView] = useState("register");
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const profileRef = useRef(null);
 
   const cartCount = cartItems.reduce(
@@ -58,6 +61,11 @@ function Navbar() {
     }
   }, [location.search, user]);
 
+  useEffect(() => {
+    setMobileMenuOpen(false);
+    setProfileOpen(false);
+  }, [location.pathname, location.search]);
+
   const clearAuthQuery = () => {
     const params = new URLSearchParams(location.search);
     params.delete("auth");
@@ -75,6 +83,7 @@ function Navbar() {
   const handleOpenAuth = (nextView = "register") => {
     setAuthView(nextView);
     setLoginOpen(true);
+    setMobileMenuOpen(false);
   };
 
   const handleCloseAuth = () => {
@@ -106,6 +115,7 @@ function Navbar() {
   const handleLogout = () => {
     logout();
     setProfileOpen(false);
+    setMobileMenuOpen(false);
     navigate("/", { replace: true });
   };
 
@@ -183,6 +193,101 @@ function Navbar() {
               </button>
               <button
                 className="login-btn"
+                onClick={() => handleOpenAuth("register")}
+              >
+                Register
+              </button>
+            </div>
+          )}
+        </div>
+
+        <div className="nav-mobile-actions">
+          <button
+            className="cart-button cart-button-mobile"
+            onClick={() => setIsCartOpen(true)}
+          >
+            <IoCartOutline className="cart-icon-svg" />
+            <span>Cart</span>
+            {cartCount > 0 && <span className="cart-count">{cartCount}</span>}
+          </button>
+
+          <button
+            type="button"
+            className="mobile-menu-toggle"
+            onClick={() => setMobileMenuOpen((prev) => !prev)}
+            aria-expanded={mobileMenuOpen}
+            aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+          >
+            {mobileMenuOpen ? <IoCloseOutline /> : <IoMenuOutline />}
+          </button>
+        </div>
+
+        <div className={`mobile-nav-panel ${mobileMenuOpen ? "open" : ""}`}>
+          <div className="mobile-nav-links">
+            <NavLink
+              to="/"
+              end
+              className={({ isActive }) => `mobile-nav-link ${isActive ? "active" : ""}`}
+            >
+              Home
+            </NavLink>
+            <NavLink
+              to="/about"
+              className={({ isActive }) => `mobile-nav-link ${isActive ? "active" : ""}`}
+            >
+              About
+            </NavLink>
+            {user && (
+              <NavLink
+                to="/dashboard"
+                className={({ isActive }) => `mobile-nav-link ${isActive ? "active" : ""}`}
+              >
+                Dashboard
+              </NavLink>
+            )}
+          </div>
+
+          {user ? (
+            <div className="mobile-profile-card">
+              <div className="mobile-profile-summary">
+                <IoPersonCircleOutline className="profile-icon" />
+                <div>
+                  <p>{user.name}</p>
+                  <span>{user.email}</span>
+                </div>
+              </div>
+
+              <div className="mobile-auth-actions">
+                <Link to="/dashboard" className="mobile-action-btn">
+                  <IoGridOutline />
+                  <span>Dashboard</span>
+                </Link>
+                <Link to="/dashboard?tab=orders" className="mobile-action-btn">
+                  <IoReceiptOutline />
+                  <span>Orders</span>
+                </Link>
+                <button
+                  type="button"
+                  className="mobile-action-btn mobile-action-btn-danger"
+                  onClick={handleLogout}
+                >
+                  <IoLogOutOutline />
+                  <span>Logout</span>
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div className="mobile-auth-actions">
+              <button
+                type="button"
+                className="ghost-auth-btn mobile-auth-btn"
+                onClick={() => handleOpenAuth("login")}
+              >
+                Login
+              </button>
+              <button
+                type="button"
+                className="login-btn mobile-auth-btn"
                 onClick={() => handleOpenAuth("register")}
               >
                 Register

@@ -146,8 +146,13 @@
 ================================ */
 
 @media (max-width: 1100px) {
+  .canteens {
+    padding: 110px 60px;
+  }
+
   .canteen-grid {
     grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
   }
 }
 

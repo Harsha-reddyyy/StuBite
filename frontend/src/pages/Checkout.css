@@ -197,6 +197,21 @@
     padding: 108px 16px 36px;
   }
 
+  .order-row,
+  .order-total {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .payment-option {
+    gap: 10px;
+  }
+
+  .add-address-btn,
+  .place-order-btn {
+    width: 100%;
+  }
+
   .checkout-card,
   .cart-summary {
     border-radius: 24px;

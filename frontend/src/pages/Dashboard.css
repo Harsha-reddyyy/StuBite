@@ -392,6 +392,11 @@
     position: static;
   }
 
+  .dashboard-menu {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
   .address-grid {
     grid-template-columns: 1fr;
   }
@@ -406,7 +411,42 @@
     flex-direction: column;
   }
 
+  .dashboard-menu {
+    grid-template-columns: 1fr;
+  }
+
+  .order-header,
+  .order-item,
+  .order-meta,
+  .dashboard-confirm-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
   .form-row {
     grid-template-columns: 1fr;
+  }
+
+  .dashboard-panel,
+  .dashboard-sidebar,
+  .address-form,
+  .profile-form,
+  .saved-address,
+  .order-card,
+  .dashboard-empty-state {
+    padding: 20px;
+  }
+
+  .dashboard-primary-btn,
+  .dashboard-secondary-btn,
+  .save-address-btn,
+  .save-profile-btn,
+  .dashboard-empty-state button,
+  .default-btn,
+  .edit-btn,
+  .delete-btn,
+  .remove-default-btn {
+    width: 100%;
+    justify-content: center;
   }
 }

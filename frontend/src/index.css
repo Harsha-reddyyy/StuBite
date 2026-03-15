@@ -13,11 +13,17 @@ body {
   background-color: #0F1115;
   color: white;
   font-family: "Inter", sans-serif;
+  overflow-x: hidden;
 }
 
 a {
   text-decoration: none;
   color: inherit;
+}
+
+img {
+  max-width: 100%;
+  display: block;
 }
 
 h1{
@@ -96,4 +102,11 @@ background:#ff7a00;
 
 color:white;
 
+}
+
+@media (max-width: 640px) {
+  .stubite-toast {
+    width: calc(100vw - 24px);
+    margin-inline: 12px;
+  }
 }

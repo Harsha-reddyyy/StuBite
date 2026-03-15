@@ -53,7 +53,7 @@ function CartSidebar({ isOpen, closeCart, openLogin }) {
 
     if (!isAuthenticated) {
       closeCart();
-      openLogin();
+      openLogin("/checkout");
       return;
     }
 

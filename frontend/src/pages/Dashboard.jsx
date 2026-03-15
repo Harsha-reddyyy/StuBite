@@ -77,6 +77,13 @@ function Dashboard() {
       return;
     }
 
+    setLoading(true);
+    setAddresses([]);
+    setOrders([]);
+    setShowForm(false);
+    setEditingAddressId(null);
+    setAddressPendingDelete(null);
+
     const loadDashboard = async () => {
       try {
         const data = await apiRequest("/api/user/me", { token });

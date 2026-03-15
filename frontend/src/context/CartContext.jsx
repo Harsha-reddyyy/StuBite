@@ -38,6 +38,7 @@ export const CartProvider = ({ children }) => {
   const [cartItems, setCartItemsState] = useState(getStoredGuestCart);
   const lastSyncedCartRef = useRef("[]");
   const activeRequestRef = useRef(false);
+  const wasAuthenticatedRef = useRef(Boolean(isAuthenticated && token));
 
   // Expose one setter so cart updates stay consistent everywhere.
   const setCartItems = useCallback((updater) => {
@@ -48,7 +49,8 @@ export const CartProvider = ({ children }) => {
     });
   }, []);
 
-  // Guests store cart changes locally, while signed-in users rely on the API.
+  // Guests store cart changes locally. Authenticated cart hydration handles clearing guest storage later,
+  // so we do not remove it here or the checkout-login merge loses the pending guest items.
   useEffect(() => {
     if (!isAuthenticated || !token) {
       if (typeof window !== "undefined") {
@@ -58,10 +60,6 @@ export const CartProvider = ({ children }) => {
         );
       }
       return;
-    }
-
-    if (typeof window !== "undefined") {
-      window.localStorage.removeItem(GUEST_CART_STORAGE_KEY);
     }
   }, [cartItems, isAuthenticated, token]);
 
@@ -108,11 +106,26 @@ export const CartProvider = ({ children }) => {
   // the already saved server cart if there was nothing local to merge.
   useEffect(() => {
     if (!isAuthenticated || !token) {
+      const wasAuthenticated = wasAuthenticatedRef.current;
+      wasAuthenticatedRef.current = false;
+
+      if (wasAuthenticated) {
+        if (typeof window !== "undefined") {
+          window.localStorage.removeItem(GUEST_CART_STORAGE_KEY);
+        }
+
+        setCartItemsState([]);
+        lastSyncedCartRef.current = "[]";
+        return;
+      }
+
       const guestCart = getStoredGuestCart();
       setCartItemsState(guestCart);
       lastSyncedCartRef.current = JSON.stringify(guestCart);
       return;
     }
+
+    wasAuthenticatedRef.current = true;
 
     const loadCart = async () => {
       activeRequestRef.current = true;
@@ -134,6 +147,10 @@ export const CartProvider = ({ children }) => {
           const data = await apiRequest("/api/user/cart", { token });
           lastSyncedCartRef.current = JSON.stringify(data.cart || []);
           setCartItemsState(data.cart || []);
+        }
+
+        if (typeof window !== "undefined") {
+          window.localStorage.removeItem(GUEST_CART_STORAGE_KEY);
         }
       } catch (error) {
         toast.error(error.message);

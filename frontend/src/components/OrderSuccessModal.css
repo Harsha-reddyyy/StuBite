@@ -7,8 +7,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 500;
-  padding: 20px;
+  z-index: 2100;
+  padding: 20px 16px;
 }
 
 .success-modal {
@@ -21,6 +21,7 @@
   box-shadow: 0 28px 70px rgba(0, 0, 0, 0.28);
   color: white;
   text-align: center;
+  margin: 0 auto;
 }
 
 .success-badge {
@@ -71,4 +72,18 @@
   font-size: 15px;
   font-weight: 800;
   cursor: pointer;
+}
+
+@media (max-width: 640px) {
+  .success-modal {
+    padding: 28px 20px;
+  }
+
+  .success-modal h1 {
+    font-size: 28px;
+  }
+
+  .success-btn {
+    width: 100%;
+  }
 }

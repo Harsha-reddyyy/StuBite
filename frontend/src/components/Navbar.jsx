@@ -26,6 +26,7 @@ function Navbar() {
 
   const [loginOpen, setLoginOpen] = useState(false);
   const [authView, setAuthView] = useState("register");
+  const [authRedirect, setAuthRedirect] = useState("");
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -57,6 +58,7 @@ function Navbar() {
 
     if (!user && (auth === "login" || auth === "register")) {
       setAuthView(auth);
+      setAuthRedirect(params.get("redirect") || "");
       setLoginOpen(true);
     }
   }, [location.search, user]);
@@ -80,14 +82,16 @@ function Navbar() {
     );
   };
 
-  const handleOpenAuth = (nextView = "register") => {
+  const handleOpenAuth = (nextView = "register", redirectPath = "") => {
     setAuthView(nextView);
+    setAuthRedirect(redirectPath);
     setLoginOpen(true);
     setMobileMenuOpen(false);
   };
 
   const handleCloseAuth = () => {
     setLoginOpen(false);
+    setAuthRedirect("");
 
     const params = new URLSearchParams(location.search);
     if (params.has("auth") || params.has("redirect")) {
@@ -98,7 +102,7 @@ function Navbar() {
   // After login we either continue the original protected action or send the user to the dashboard.
   const handleAuthSuccess = () => {
     const params = new URLSearchParams(location.search);
-    const redirect = params.get("redirect");
+    const redirect = authRedirect || params.get("redirect");
 
     if (params.has("auth") || params.has("redirect")) {
       clearAuthQuery();
@@ -109,7 +113,8 @@ function Navbar() {
       return;
     }
 
-    navigate("/dashboard", { replace: true });
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+    navigate("/", { replace: true });
   };
 
   const handleLogout = () => {
@@ -307,7 +312,7 @@ function Navbar() {
       <CartSidebar
         isOpen={isCartOpen}
         closeCart={() => setIsCartOpen(false)}
-        openLogin={() => handleOpenAuth("login")}
+        openLogin={(redirectPath) => handleOpenAuth("login", redirectPath)}
       />
     </>
   );

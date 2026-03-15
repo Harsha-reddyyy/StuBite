@@ -1,10 +1,24 @@
+import { useEffect } from "react";
 import "./OrderSuccessModal.css";
 
 function OrderSuccessModal({ isOpen, closeModal }) {
+  useEffect(() => {
+    if (!isOpen || typeof document === "undefined") {
+      return undefined;
+    }
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
   return (
-    <div className="success-overlay">
+    <div className="success-overlay" role="dialog" aria-modal="true">
       {/* This modal is intentionally brief so checkout ends on a clear success state, not another task list. */}
       <div className="success-modal">
         <div className="success-badge">Order Confirmed</div>

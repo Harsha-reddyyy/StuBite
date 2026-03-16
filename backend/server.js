@@ -13,6 +13,20 @@ const app = express();
 
 /* ---------------- CORS ---------------- */
 
+const normalizeOrigin = (value) => value?.trim().replace(/\/$/, "");
+
+const configuredOrigins = [
+  process.env.FRONTEND_URL,
+  ...(process.env.CORS_ALLOWED_ORIGINS || "").split(",")
+]
+  .map(normalizeOrigin)
+  .filter(Boolean);
+
+const allowedOrigins = new Set([
+  "https://stubite-frontend.onrender.com",
+  ...configuredOrigins
+]);
+
 // Localhost and 127.0.0.1 are both allowed so the frontend still works across different dev setups.
 const allowedOriginPatterns = [
   /^http:\/\/localhost:\d+$/,
@@ -21,8 +35,11 @@ const allowedOriginPatterns = [
 
 const corsOptions = {
   origin(origin, callback) {
+    const normalizedOrigin = normalizeOrigin(origin);
+
     if (
       !origin ||
+      allowedOrigins.has(normalizedOrigin) ||
       allowedOriginPatterns.some((pattern) => pattern.test(origin))
     ) {
       return callback(null, true);

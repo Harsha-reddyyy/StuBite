@@ -1,5 +1,11 @@
+const deployedApiBaseUrl = "https://stubite-backend.onrender.com";
+
 export const apiBaseUrl =
-  import.meta.env.VITE_API_BASE_URL || "";
+  import.meta.env.VITE_API_BASE_URL ||
+  (typeof window !== "undefined" &&
+  window.location.hostname === "stubite-frontend.onrender.com"
+    ? deployedApiBaseUrl
+    : "");
 
 // These helpers keep network and server errors readable for the UI layer.
 const formatNetworkErrorMessage = (path) => {

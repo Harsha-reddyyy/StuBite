@@ -13,6 +13,8 @@ const app = express();
 
 /* ---------------- CORS ---------------- */
 
+const FRONTEND_URL = "https://stubite-frontend.onrender.com";
+
 const normalizeOrigin = (value) => value?.trim().replace(/\/$/, "");
 
 const configuredOrigins = [
@@ -23,7 +25,7 @@ const configuredOrigins = [
   .filter(Boolean);
 
 const allowedOrigins = new Set([
-  "https://stubite-frontend.onrender.com",
+  FRONTEND_URL,
   ...configuredOrigins
 ]);
 

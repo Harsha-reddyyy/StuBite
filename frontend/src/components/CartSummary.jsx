@@ -1,9 +1,8 @@
 import "./CartSummary.css";
-import { useContext } from "react";
-import { CartContext } from "../context/CartContext";
+import { useCart } from "../context/cart-context";
 
 function CartSummary({ title = "Your Cart" }) {
-  const { cartItems, setCartItems } = useContext(CartContext);
+  const { cartItems, setCartItems } = useCart();
 
   // This compact summary is reused in checkout, so the controls mirror
   // the cart drawer without duplicating cart state elsewhere.

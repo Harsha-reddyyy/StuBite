@@ -1,16 +1,8 @@
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useRef,
-  useState
-} from "react";
-import { useAuth } from "./AuthContext";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useAuth } from "./auth-context";
+import { CartContext } from "./cart-context";
 import { apiRequest } from "../lib/api";
 import { toast } from "react-toastify";
-
-export const CartContext = createContext();
 const GUEST_CART_STORAGE_KEY = "stubite-guest-cart";
 
 // Guests keep their cart locally until they sign in.
@@ -27,7 +19,7 @@ const getStoredGuestCart = () => {
 
     const parsed = JSON.parse(storedValue);
     return Array.isArray(parsed) ? parsed : [];
-  } catch (error) {
+  } catch {
     window.localStorage.removeItem(GUEST_CART_STORAGE_KEY);
     return [];
   }
@@ -167,7 +159,4 @@ export const CartProvider = ({ children }) => {
       {children}
     </CartContext.Provider>
   );
-
 };
-
-export const useCart = () => useContext(CartContext);

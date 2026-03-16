@@ -2,7 +2,7 @@ import "./Dashboard.css";
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/auth-context";
 import { apiRequest } from "../lib/api";
 
 const DASHBOARD_TABS = new Set(["addresses", "orders", "profile"]);

@@ -1,12 +1,11 @@
 import "./CartSidebar.css";
-import { useContext } from "react";
-import { CartContext } from "../context/CartContext";
-import { useAuth } from "../context/AuthContext";
+import { useCart } from "../context/cart-context";
+import { useAuth } from "../context/auth-context";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 function CartSidebar({ isOpen, closeCart, openLogin }) {
-  const { cartItems, setCartItems } = useContext(CartContext);
+  const { cartItems, setCartItems } = useCart();
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
 

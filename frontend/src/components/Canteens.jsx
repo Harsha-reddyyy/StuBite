@@ -21,7 +21,7 @@ function Canteens() {
       const data = await apiRequest("/api/canteens");
       setCanteens(data.canteens || []);
       fallbackToastShownRef.current = false;
-    } catch (error) {
+    } catch {
       setCanteens(fallbackCanteens);
       setErrorMessage("");
 

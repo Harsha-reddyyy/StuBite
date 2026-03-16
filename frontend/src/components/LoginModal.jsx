@@ -1,7 +1,7 @@
 import "./LoginModal.css";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/auth-context";
 import { apiRequest } from "../lib/api";
 
 // One modal handles register, login, and forgot-password flows

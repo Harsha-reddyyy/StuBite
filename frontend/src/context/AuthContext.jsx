@@ -1,12 +1,5 @@
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useState
-} from "react";
-
-const AuthContext = createContext(null);
+import { useCallback, useEffect, useState } from "react";
+import { AuthContext } from "./auth-context";
 const AUTH_STORAGE_KEY = "stubite-auth";
 
 // Restore persisted auth once on startup so refreshes do not log users out.
@@ -28,7 +21,7 @@ const getStoredAuth = () => {
       user: parsedValue.user || null,
       token: parsedValue.token || null
     };
-  } catch (error) {
+  } catch {
     window.localStorage.removeItem(AUTH_STORAGE_KEY);
     return { user: null, token: null };
   }
@@ -114,5 +107,3 @@ export const AuthProvider = ({ children }) => {
     </AuthContext.Provider>
   );
 };
-
-export const useAuth = () => useContext(AuthContext);

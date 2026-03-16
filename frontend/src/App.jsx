@@ -1,5 +1,5 @@
-import { useEffect, useRef } from "react";
-import { Route, Routes, useLocation } from "react-router-dom";
+import { useEffect } from "react";
+import { Route, Routes, useLocation, useNavigationType } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -14,35 +14,11 @@ import Checkout from "./pages/Checkout";
 import OrderSuccess from "./pages/OrderSuccess";
 import "./App.css";
 
-// We use a simple route ranking system to decide which direction
-// the page transition should move when users navigate around the app.
-const routeOrder = {
-  "/": 0,
-  "/about": 1,
-  "/menu": 2,
-  "/dashboard": 3,
-  "/checkout": 4,
-  "/order-success": 5
-};
-
-const getRouteRank = (pathname) => {
-  if (pathname.startsWith("/menu/")) {
-    return routeOrder["/menu"];
-  }
-
-  return routeOrder[pathname] ?? 0;
-};
-
 function App() {
   const location = useLocation();
-  const previousRankRef = useRef(getRouteRank(location.pathname));
-  const currentRank = getRouteRank(location.pathname);
+  const navigationType = useNavigationType();
   const transitionDirection =
-    currentRank >= previousRankRef.current ? "forward" : "backward";
-
-  useEffect(() => {
-    previousRankRef.current = currentRank;
-  }, [currentRank]);
+    navigationType === "POP" ? "backward" : "forward";
 
   // On normal route changes, we reset the page to the top.
   // If the URL includes a hash, we scroll straight to that section instead.

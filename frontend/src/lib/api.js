@@ -51,7 +51,7 @@ export const apiRequest = async (path, options = {}) => {
 
   try {
     response = await fetch(`${apiBaseUrl}${path}`, requestOptions);
-  } catch (error) {
+  } catch {
     throw new Error(formatNetworkErrorMessage(path));
   }
 
@@ -62,7 +62,7 @@ export const apiRequest = async (path, options = {}) => {
 
   try {
     data = text ? JSON.parse(text) : {};
-  } catch (error) {
+  } catch {
     data = {};
   }
 

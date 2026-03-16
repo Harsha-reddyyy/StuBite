@@ -1,15 +1,15 @@
 import "./Menu.css";
 import { useParams, Link } from "react-router-dom";
-import { useEffect, useContext, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { IoArrowBack } from "react-icons/io5";
-import { CartContext } from "../context/CartContext";
+import { useCart } from "../context/cart-context";
 import { toast } from "react-toastify";
 import { apiRequest } from "../lib/api";
 import { getFallbackMenu } from "../lib/catalogFallback";
 
 function Menu() {
   const { canteenName } = useParams();
-  const { cartItems, setCartItems } = useContext(CartContext);
+  const { cartItems, setCartItems } = useCart();
   const [title, setTitle] = useState("Menu");
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);

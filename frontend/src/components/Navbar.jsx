@@ -1,5 +1,5 @@
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   IoChevronDown,
   IoCloseOutline,
@@ -15,22 +15,32 @@ import logo from "../assets/stubite-logo.png";
 import "./Navbar.css";
 import LoginModal from "./LoginModal";
 import CartSidebar from "./CartSidebar";
-import { CartContext } from "../context/CartContext";
-import { useAuth } from "../context/AuthContext";
+import { useCart } from "../context/cart-context";
+import { useAuth } from "../context/auth-context";
 
 function Navbar() {
-  const { cartItems } = useContext(CartContext);
+  const { cartItems } = useCart();
   const { user, logout } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
+  const routeKey = `${location.pathname}${location.search}`;
 
   const [loginOpen, setLoginOpen] = useState(false);
   const [authView, setAuthView] = useState("register");
   const [authRedirect, setAuthRedirect] = useState("");
   const [isCartOpen, setIsCartOpen] = useState(false);
-  const [profileOpen, setProfileOpen] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [profileOpenRoute, setProfileOpenRoute] = useState("");
+  const [mobileMenuOpenRoute, setMobileMenuOpenRoute] = useState("");
   const profileRef = useRef(null);
+  const params = new URLSearchParams(location.search);
+  const authQuery = !user ? params.get("auth") : null;
+  const queryAuthView =
+    authQuery === "login" || authQuery === "register" ? authQuery : "";
+  const isAuthModalOpen = loginOpen || Boolean(queryAuthView);
+  const initialAuthView = queryAuthView || authView;
+  const activeAuthRedirect = params.get("redirect") || authRedirect;
+  const profileOpen = profileOpenRoute === routeKey;
+  const mobileMenuOpen = mobileMenuOpenRoute === routeKey;
 
   const cartCount = cartItems.reduce(
     (total, item) => total + item.quantity,
@@ -41,7 +51,7 @@ function Navbar() {
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (profileRef.current && !profileRef.current.contains(event.target)) {
-        setProfileOpen(false);
+        setProfileOpenRoute("");
       }
     };
 
@@ -51,32 +61,15 @@ function Navbar() {
     };
   }, []);
 
-  // Query params let protected pages open the auth modal with the right starting view.
-  useEffect(() => {
-    const params = new URLSearchParams(location.search);
-    const auth = params.get("auth");
-
-    if (!user && (auth === "login" || auth === "register")) {
-      setAuthView(auth);
-      setAuthRedirect(params.get("redirect") || "");
-      setLoginOpen(true);
-    }
-  }, [location.search, user]);
-
-  useEffect(() => {
-    setMobileMenuOpen(false);
-    setProfileOpen(false);
-  }, [location.pathname, location.search]);
-
   const clearAuthQuery = () => {
-    const params = new URLSearchParams(location.search);
-    params.delete("auth");
-    params.delete("redirect");
+    const nextParams = new URLSearchParams(location.search);
+    nextParams.delete("auth");
+    nextParams.delete("redirect");
 
     navigate(
       {
         pathname: location.pathname,
-        search: params.toString() ? `?${params.toString()}` : ""
+        search: nextParams.toString() ? `?${nextParams.toString()}` : ""
       },
       { replace: true }
     );
@@ -86,14 +79,13 @@ function Navbar() {
     setAuthView(nextView);
     setAuthRedirect(redirectPath);
     setLoginOpen(true);
-    setMobileMenuOpen(false);
+    setMobileMenuOpenRoute("");
   };
 
   const handleCloseAuth = () => {
     setLoginOpen(false);
     setAuthRedirect("");
 
-    const params = new URLSearchParams(location.search);
     if (params.has("auth") || params.has("redirect")) {
       clearAuthQuery();
     }
@@ -101,8 +93,7 @@ function Navbar() {
 
   // After login we either continue the original protected action or send the user to the dashboard.
   const handleAuthSuccess = () => {
-    const params = new URLSearchParams(location.search);
-    const redirect = authRedirect || params.get("redirect");
+    const redirect = activeAuthRedirect;
 
     if (params.has("auth") || params.has("redirect")) {
       clearAuthQuery();
@@ -119,8 +110,8 @@ function Navbar() {
 
   const handleLogout = () => {
     logout();
-    setProfileOpen(false);
-    setMobileMenuOpen(false);
+    setProfileOpenRoute("");
+    setMobileMenuOpenRoute("");
     navigate("/", { replace: true });
   };
 
@@ -161,7 +152,9 @@ function Navbar() {
             <div
               ref={profileRef}
               className="profile-section"
-              onClick={() => setProfileOpen((prev) => !prev)}
+              onClick={() =>
+                setProfileOpenRoute((prev) => (prev === routeKey ? "" : routeKey))
+              }
             >
               <IoPersonCircleOutline className="profile-icon" />
               <span className="profile-name">{user.name}</span>
@@ -170,13 +163,13 @@ function Navbar() {
               {profileOpen && (
                 // The account menu keeps the most common signed-in actions within one click.
                 <div className="profile-dropdown">
-                  <Link to="/dashboard" onClick={() => setProfileOpen(false)}>
+                  <Link to="/dashboard" onClick={() => setProfileOpenRoute("")}>
                     <IoGridOutline />
                     <span>Dashboard</span>
                   </Link>
                   <Link
                     to="/dashboard?tab=orders"
-                    onClick={() => setProfileOpen(false)}
+                    onClick={() => setProfileOpenRoute("")}
                   >
                     <IoReceiptOutline />
                     <span>Orders</span>
@@ -219,7 +212,11 @@ function Navbar() {
           <button
             type="button"
             className="mobile-menu-toggle"
-            onClick={() => setMobileMenuOpen((prev) => !prev)}
+            onClick={() =>
+              setMobileMenuOpenRoute((prev) =>
+                prev === routeKey ? "" : routeKey
+              )
+            }
             aria-expanded={mobileMenuOpen}
             aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
           >
@@ -302,12 +299,12 @@ function Navbar() {
         </div>
       </nav>
 
-      <LoginModal
-        isOpen={loginOpen}
-        onClose={handleCloseAuth}
-        initialView={authView}
-        onAuthSuccess={handleAuthSuccess}
-      />
+        <LoginModal
+          isOpen={isAuthModalOpen}
+          onClose={handleCloseAuth}
+          initialView={initialAuthView}
+          onAuthSuccess={handleAuthSuccess}
+        />
 
       <CartSidebar
         isOpen={isCartOpen}

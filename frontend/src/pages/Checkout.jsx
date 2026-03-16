@@ -1,7 +1,7 @@
 import "./Checkout.css";
-import { useEffect, useState, useContext } from "react";
-import { CartContext } from "../context/CartContext";
-import { useAuth } from "../context/AuthContext";
+import { useEffect, useState } from "react";
+import { useCart } from "../context/cart-context";
+import { useAuth } from "../context/auth-context";
 import CartSummary from "../components/CartSummary";
 import OrderSuccessModal from "../components/OrderSuccessModal";
 import { useNavigate } from "react-router-dom";
@@ -10,7 +10,7 @@ import { apiRequest } from "../lib/api";
 
 function Checkout() {
   const navigate = useNavigate();
-  const { cartItems, setCartItems } = useContext(CartContext);
+  const { cartItems, setCartItems } = useCart();
   const { token, isAuthenticated } = useAuth();
 
   const [showSuccess, setShowSuccess] = useState(false);
